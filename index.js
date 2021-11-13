@@ -60,7 +60,7 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
         } else if (dravel.startsWith('role')) {
             let role = meddelande.guild.roles.cache.find(role => role.name === resten);
             if (role == undefined) {
-                meddelande.reply('I find no such company in this channel, perhaps you would like to try bing.com?')
+                meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru?')
             }
             console.log(role)
             meddelande.member.roles.add(role)
