@@ -65,9 +65,6 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
         } else if (dravel.startsWith('role')) {
             let role = meddelande.guild.roles.cache.find(role => role.name === resten);
             if (role == undefined) {
-<<<<<<< Updated upstream
-                meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru?')
-=======
                 meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru? Bear in mind that I am an important petter and meticulous about upper- and lowercase :)')
             } else {
                 console.log(role)
@@ -84,7 +81,6 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                 } else {
                     meddelande.reply('Thinking about it now, I have come to realize that you already are ' + role.toString() +'! Unfortunately, I cannot make you double-' + role.toString() + ' :(')
                 }
->>>>>>> Stashed changes
             }
 
         }
