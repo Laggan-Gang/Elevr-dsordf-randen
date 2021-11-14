@@ -43,35 +43,49 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
         if (dravel.startsWith('roll')) {
             let role = meddelande.guild.roles.cache.find(role => role.name === resten);
             if (role == undefined) {
-                meddelande.reply('Finner inget sådant sällskap i den här kanalen, har du provat bing.com?')
+                meddelande.reply('Finner inget sådant sällskap i den här kanalen, har du provat bing.com? Kom ihåg att jag är en viktigpetter och är väldigt noggrann med gemener och versaler :)')
+            } else {
+                console.log(role)
+                if (!meddelande.member.roles.cache.some(r => r.name === resten)){
+                meddelande.member.roles.add(role)
+                    .then(() => {
+                        meddelande.reply('Har talat med fakulteten och har beslutat att gå din förfrågan till mötes. Välkomen till ' + role.toString() + '-klubben!')
+                    })
+                    .catch(error => {
+                        if (error.toString() === 'DiscordAPIError: Missing Permissions') {
+                            meddelande.reply('Har undersökt saken och kommit fram till att du inte riktigt är den typ vi söker som ' + role.toString())
+                        }
+                    })
+                } else {
+                    meddelande.reply('Efter eftertanke har det slagit mig att du redan är ' + role.toString() + '! Jag kan tyvärr inte göra dig till dubbel-' + role.toString() + ' :(')
+                }
             }
-            console.log(role)
-            meddelande.member.roles.add(role)
-                .then(() => {
-                    meddelande.reply('Har talat med fakulteten och har beslutat att gå din förfrågan till mötes. Välkomen till ' + role.toString() + '-klubben!')
-                })
-                .catch(error => {
-                    if (error.toString() === 'DiscordAPIError: Missing Permissions') {
-                        meddelande.reply('Har undersökt saken och kommit fram till att du inte riktigt är den typ vi söker som ' + role.toString())
-                    }
-                })
 
 
         } else if (dravel.startsWith('role')) {
             let role = meddelande.guild.roles.cache.find(role => role.name === resten);
             if (role == undefined) {
+<<<<<<< Updated upstream
                 meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru?')
+=======
+                meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru? Bear in mind that I am an important petter and meticulous about upper- and lowercase :)')
+            } else {
+                console.log(role)
+                if (!meddelande.member.roles.cache.some(r => r.name === resten)){
+                meddelande.member.roles.add(role)
+                    .then(() => {
+                        meddelande.reply('I have spoken with the faculty and made the descision to grant your request. Welcome to the ' + role.toString() + '-society!')
+                    })
+                    .catch(error => {
+                        if (error.toString() === 'DiscordAPIError: Missing Permissions') {
+                            meddelande.reply('After some deep consideration I have reached the conclusion that you are not the kind of person we are looking for as ' + role.toString())
+                        }
+                    })
+                } else {
+                    meddelande.reply('Thinking about it now, I have come to realize that you already are ' + role.toString() +'! Unfortunately, I cannot make you double-' + role.toString() + ' :(')
+                }
+>>>>>>> Stashed changes
             }
-            console.log(role)
-            meddelande.member.roles.add(role)
-                .then(() => {
-                    meddelande.reply('I have spoken with the faculty and made the descision to grant your request. Welcome to the ' + role.toString() + '-society!')
-                })
-                .catch(error => {
-                    if (error.toString() === 'DiscordAPIError: Missing Permissions') {
-                        meddelande.reply('After some deep consideration I have reached the conclusion that you are not the kind of person we are looking for as ' + role.toString())
-                    }
-                })
 
         }
     }
