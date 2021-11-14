@@ -73,8 +73,8 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                     .then(() => {
                         meddelande.reply('I have spoken with the faculty and made the descision to grant your request. Welcome to the ' + role.toString() + '-society!')
                     })
-                    .catch(error => {
-                        if (error.toString() === 'DiscordAPIError: Missing Permissions') {
+                    .catch(whoops => {
+                        if (whoops.toString() === 'DiscordAPIError: Missing Permissions') {
                             meddelande.reply('After some deep consideration I have reached the conclusion that you are not the kind of person we are looking for as ' + role.toString())
                         }
                     })
