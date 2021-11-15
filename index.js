@@ -10,6 +10,8 @@ const { token } = require('./config.json');
 
 // Create a new client instance
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
+const { createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+
 let varningar = 0
 
 // When the client is ready, run this code (only once)
@@ -82,6 +84,12 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                     meddelande.reply('Thinking about it now, I have come to realize that you already are ' + role.toString() +'! Unfortunately, I cannot make you double-' + role.toString() + ' :(')
                 }
             }
+
+        } else if (dravel === 'pang!') {
+            const player = createAudioPlayer();
+            const resource = createAudioResource('C:\Users\Hugo\Documents\Lagganstuff\Elevr-dsordf-randen\clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav');
+            player.play(resource)
+            player.stop()
 
         }
     }
