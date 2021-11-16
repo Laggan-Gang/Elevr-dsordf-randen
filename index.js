@@ -9,8 +9,8 @@ const { cp } = require('fs');
 const { token } = require('./config.json');
 
 // Create a new client instance
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
-const { createAudioPlayer, createAudioResource } = require('@discordjs/voice');
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES] });
+const { createAudioPlayer, createAudioResource, joinVoiceChannel, AudioPlayer } = require('@discordjs/voice');
 
 let varningar = 0
 
@@ -48,16 +48,16 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                 meddelande.reply('Finner inget sådant sällskap i den här kanalen, har du provat bing.com? Kom ihåg att jag är en viktigpetter och är väldigt noggrann med gemener och versaler :)')
             } else {
                 console.log(role)
-                if (!meddelande.member.roles.cache.some(r => r.name === resten)){
-                meddelande.member.roles.add(role)
-                    .then(() => {
-                        meddelande.reply('Har talat med fakulteten och har beslutat att gå din förfrågan till mötes. Välkomen till ' + role.toString() + '-klubben!')
-                    })
-                    .catch(error => {
-                        if (error.toString() === 'DiscordAPIError: Missing Permissions') {
-                            meddelande.reply('Har undersökt saken och kommit fram till att du inte riktigt är den typ vi söker som ' + role.toString())
-                        }
-                    })
+                if (!meddelande.member.roles.cache.some(r => r.name === resten)) {
+                    meddelande.member.roles.add(role)
+                        .then(() => {
+                            meddelande.reply('Har talat med fakulteten och har beslutat att gå din förfrågan till mötes. Välkomen till ' + role.toString() + '-klubben!')
+                        })
+                        .catch(error => {
+                            if (error.toString() === 'DiscordAPIError: Missing Permissions') {
+                                meddelande.reply('Har undersökt saken och kommit fram till att du inte riktigt är den typ vi söker som ' + role.toString())
+                            }
+                        })
                 } else {
                     meddelande.reply('Efter eftertanke har det slagit mig att du redan är ' + role.toString() + '! Jag kan tyvärr inte göra dig till dubbel-' + role.toString() + ' :(')
                 }
@@ -70,27 +70,41 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                 meddelande.reply('I find no such company in this channel, perhaps you would like to try yandex.ru? Bear in mind that I am an important petter and meticulous about upper- and lowercase :)')
             } else {
                 console.log(role)
-                if (!meddelande.member.roles.cache.some(r => r.name === resten)){
-                meddelande.member.roles.add(role)
-                    .then(() => {
-                        meddelande.reply('I have spoken with the faculty and made the descision to grant your request. Welcome to the ' + role.toString() + '-society!')
-                    })
-                    .catch(whoops => {
-                        if (whoops.toString() === 'DiscordAPIError: Missing Permissions') {
-                            meddelande.reply('After some deep consideration I have reached the conclusion that you are not the kind of person we are looking for as ' + role.toString())
-                        }
-                    })
+                if (!meddelande.member.roles.cache.some(r => r.name === resten)) {
+                    meddelande.member.roles.add(role)
+                        .then(() => {
+                            meddelande.reply('I have spoken with the faculty and made the descision to grant your request. Welcome to the ' + role.toString() + '-society!')
+                        })
+                        .catch(whoops => {
+                            if (whoops.toString() === 'DiscordAPIError: Missing Permissions') {
+                                meddelande.reply('After some deep consideration I have reached the conclusion that you are not the kind of person we are looking for as ' + role.toString())
+                            }
+                        })
                 } else {
-                    meddelande.reply('Thinking about it now, I have come to realize that you already are ' + role.toString() +'! Unfortunately, I cannot make you double-' + role.toString() + ' :(')
+                    meddelande.reply('Thinking about it now, I have come to realize that you already are ' + role.toString() + '! Unfortunately, I cannot make you double-' + role.toString() + ' :(')
                 }
             }
 
         } else if (dravel === 'pang!') {
-            const player = createAudioPlayer();
-            const resource = createAudioResource('C:\Users\Hugo\Documents\Lagganstuff\Elevr-dsordf-randen\clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav');
-            player.play(resource)
-            player.stop()
-
+            if (meddelande.member.voice.channel !== null) {
+                let channel = meddelande.member.voice.channel
+                const player = createAudioPlayer();
+                const resource = createAudioResource('/Users/hugo/GitHub/Elevr-dsordf-randen-1/clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav');
+                const connection = joinVoiceChannel({
+                    channelId: channel.id,
+                    guildId: channel.guild.id,
+                    adapterCreator: channel.guild.voiceAdapterCreator,
+                });
+                player.play(resource)
+                const subscription = connection.subscribe(player)
+                if (subscription) {
+                    setTimeout(() => subscription.unsubscribe(), 2_000);
+                    setTimeout(() => connection.destroy(), 2_000);
+                    setTimeout(() => player.stop(), 2_000)
+                }
+            } else {
+                meddelande.reply('?')
+            }
         }
     }
 
