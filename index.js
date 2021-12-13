@@ -96,7 +96,7 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
             if (meddelande.member.voice.channel !== null) {
                 let channel = meddelande.member.voice.channel
                 const player = createAudioPlayer();
-                const resource = createAudioResource('/Users/hugo/GitHub/Elevr-dsordf-randen/clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav');
+                const resource = createAudioResource('clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav');
                 const connection = joinVoiceChannel({
                     channelId: channel.id,
                     guildId: channel.guild.id,
