@@ -64,7 +64,7 @@ client.on("messageCreate", async (meddelande) => {  //=> är en funktion
                     }
                 }
             } else {
-                meddelande.reply('Här skulle jag vilja kliva in och påminna dig om att digital nedskräpning är fortfarande nedskrpäning, och att ägna sig åt sådanna vedervärdiga projekt gör hela kanalen till åtlöje. Vänligen se till att alla dina icke-essentiella bot-kommandon skrivs i' + meddelande.guild.channels.cache.get('539847809004994560').toString() + '. Fundera ett slag över dina handlingar och hur de påverkar de i din omgivning. Varning är ett bra exempel på ett essentiellt bot-kommando.')
+                meddelande.reply('Här skulle jag vilja kliva in och påminna dig om att digital nedskräpning är fortfarande nedskrpäning, och att ägna sig åt sådanna vedervärdiga projekt gör hela kanalen till åtlöje. Vänligen se till att alla dina icke-essentiella bot-kommandon skrivs i ' + meddelande.guild.channels.cache.get('539847809004994560').toString() + '. Fundera ett slag över dina handlingar och hur de påverkar de i din omgivning. Varning är ett bra exempel på ett essentiellt bot-kommando.')
             }
 
         } else if (dravel.startsWith('role')) {
