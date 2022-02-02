@@ -53,7 +53,7 @@ client.on("messageCreate", async (meddelande) => {
   let resten = meddelande.content.slice(5);
   if (!meddelande.author.bot) {
     if (meddelande.type === "REPLY") {
-      elevRådsOrdförande(meddelande, dravel);
+      await elevRådsOrdförande(meddelande, dravel);
     } else if (dravel === "pang!") {
       if (meddelande.member.voice.channel !== null) {
         await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
@@ -91,7 +91,7 @@ async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
   }
 }
 
-function elevRådsOrdförande(meddelande, dravel) {
+async function elevRådsOrdförande(meddelande, dravel) {
   let brottsling = meddelande.mentions.repliedUser;
   let brottet = await meddelande.channel.messages.fetch(
     meddelande.reference.messageId
