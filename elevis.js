@@ -49,12 +49,10 @@ function löftesKollaren(player) {
 
 client.on("messageCreate", async (meddelande) => {
   //=> är en funktion
-  let dravel = meddelande.content.toLocaleLowerCase();
-  let resten = meddelande.content.slice(5);
   if (!meddelande.author.bot) {
     if (meddelande.type === "REPLY") {
-      await elevRådsOrdförande(meddelande, dravel);
-    } else if (dravel === "pang!") {
+      await elevRådsOrdförande(meddelande);
+    } else if (meddelande.content.toLocaleLowerCase() === "pang!") {
       if (meddelande.member.voice.channel !== null) {
         await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
           meddelande
@@ -91,7 +89,9 @@ async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
   }
 }
 
-async function elevRådsOrdförande(meddelande, dravel) {
+async function elevRådsOrdförande(meddelande) {
+  let dravel = meddelande.content.toLocaleLowerCase();
+  let resten = meddelande.content.slice(5);
   let brottsling = meddelande.mentions.repliedUser;
   let brottet = await meddelande.channel.messages.fetch(
     meddelande.reference.messageId
