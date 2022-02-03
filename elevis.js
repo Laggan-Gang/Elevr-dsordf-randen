@@ -83,7 +83,7 @@ async function motiveradVarning(meddelande) {
       break;
     case "warning":
       meddelande.reply(
-        `${warned} you have been warned on account of having "${orsak}". Perhaps it would be wise to think wtice, so we can avoid another situation in which you have ${orsak} again.`
+        `${warned} you have been warned on account of having "${orsak}". Perhaps it would be wise to think twice, so we can avoid another situation in which you have ${orsak} again.`
       );
   }
 }
