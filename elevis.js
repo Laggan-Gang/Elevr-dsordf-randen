@@ -77,12 +77,12 @@ async function motiveradVarning(meddelande) {
   const orsak = arr.slice(2).join(" ");
   switch (command) {
     case "varning":
-      meddelande.reply(
+      meddelande.send(
         `${warned} du har blivit varnad eftersom du har "${orsak}". Det vore kanske bäst att tänka efter lite nästa gång, så vi inte har en till situation där du ${orsak} igen.`
       );
       break;
     case "warning":
-      meddelande.reply(
+      meddelande.send(
         `${warned} you have been warned on account of having "${orsak}". Perhaps it would be wise to think twice, so we can avoid another situation in which you have ${orsak} again.`
       );
   }
