@@ -49,14 +49,10 @@ function löftesKollaren(player) {
 
 client.on("messageCreate", async (meddelande) => {
   //=> är en funktion
-  const arr = meddelande.content.split(" ");
-  const warned = arr[0];
-  const command = arr[1];
-  const orsak = arr.slice(2).join(" ");
+
   if (!meddelande.author.bot) {
     switch (true) {
-      case meddelande.content.startsWith("<@") === true &&
-        command.endsWith("arning"):
+      case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
       case meddelande.type === "REPLY":
@@ -80,6 +76,9 @@ async function motiveradVarning(meddelande) {
   const warned = arr[0];
   const command = arr[1];
   const orsak = arr.slice(2).join(" ");
+  if (!command.endsWith("arning")) {
+    return;
+  }
   switch (command) {
     case "varning":
       await meddelande.channel.send(
