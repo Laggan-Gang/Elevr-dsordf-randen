@@ -80,13 +80,11 @@ async function motiveradVarning(meddelande) {
       await meddelande.channel.send(
         `${warned} du har blivit varnad eftersom du har "${orsak}". Det vore kanske bäst att tänka efter lite nästa gång, så vi inte har en till situation där du ${orsak} igen.`
       );
-      await meddelande.channel.send(":cmm:");
       break;
     case "warning":
       await meddelande.channel.send(
         `${warned} you have been warned on account of having "${orsak}". Perhaps it would be wise to think twice, so we can avoid another situation in which you have ${orsak} again.`
       );
-      await meddelande.channel.send(":cmm:");
       break;
   }
   try {
