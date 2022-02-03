@@ -50,19 +50,43 @@ function löftesKollaren(player) {
 client.on("messageCreate", async (meddelande) => {
   //=> är en funktion
   if (!meddelande.author.bot) {
-    if (meddelande.type === "REPLY") {
-      await elevRådsOrdförande(meddelande);
-    } else if (meddelande.content.toLocaleLowerCase() === "pang!") {
-      if (meddelande.member.voice.channel !== null) {
-        await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
-          meddelande
-        );
-      } else {
-        meddelande.reply("?");
-      }
+    switch (true) {
+      case meddelande.content.startsWith("<@") === true:
+        await motiveradVarning(meddelande);
+        break;
+      case meddelande.type === "REPLY":
+        await elevRådsOrdförande(meddelande);
+        break;
+      case meddelande.content.toLocaleLowerCase() === "pang!":
+        if (meddelande.member.voice.channel !== null) {
+          await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
+            meddelande
+          );
+        } else {
+          meddelande.reply("?");
+        }
+        break;
     }
   }
 });
+
+async function motiveradVarning(meddelande) {
+  const arr = meddelande.content.split(" ");
+  const warned = arr[0];
+  const command = arr[1];
+  const orsak = arr.slice(2);
+  switch (command) {
+    case "varning":
+      meddelande.reply(
+        `${warned} du har blivit varnad eftersom du "${orsak}". Det vore kanske bäst att tänka efter lite nästa gång, så vi inte har en till situation där du "${orsak}" igen.`
+      );
+      break;
+    case "warning":
+      meddelande.reply(
+        `${warned} you have been warned on account of having "${orsak}". Perhaps it would be wise to think wtice, so we can avoid another situation in which you have ${orsak} again.`
+      );
+  }
+}
 
 async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
   meddelande
