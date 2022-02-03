@@ -74,7 +74,7 @@ async function motiveradVarning(meddelande) {
   const arr = meddelande.content.split(" ");
   const warned = arr[0];
   const command = arr[1];
-  const orsak = arr.slice(2);
+  const orsak = arr.slice(2).join(" ");
   switch (command) {
     case "varning":
       meddelande.reply(
