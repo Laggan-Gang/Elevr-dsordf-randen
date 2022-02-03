@@ -78,7 +78,7 @@ async function motiveradVarning(meddelande) {
   switch (command) {
     case "varning":
       meddelande.reply(
-        `${warned} du har blivit varnad eftersom du "${orsak}". Det vore kanske bäst att tänka efter lite nästa gång, så vi inte har en till situation där du "${orsak}" igen.`
+        `${warned} du har blivit varnad eftersom du har "${orsak}". Det vore kanske bäst att tänka efter lite nästa gång, så vi inte har en till situation där du ${orsak} igen.`
       );
       break;
     case "warning":
