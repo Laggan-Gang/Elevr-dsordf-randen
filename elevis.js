@@ -13,6 +13,7 @@ const {
 } = require("discord.js");
 const { cp } = require("fs");
 const { token } = require("./config.json");
+const bigData = require("./statCollector");
 
 // Create a new client instance
 const client = new Client({
@@ -21,6 +22,7 @@ const client = new Client({
     Intents.FLAGS.GUILD_MESSAGES,
     Intents.FLAGS.GUILD_MEMBERS,
     Intents.FLAGS.GUILD_VOICE_STATES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS, //ASVIKTIG!!!
   ],
 });
 const {
@@ -52,6 +54,10 @@ client.on("messageCreate", async (meddelande) => {
 
   if (!meddelande.author.bot) {
     switch (true) {
+      case meddelande.content.startsWith("!big"):
+        await bigData.statCollector(meddelande);
+        break;
+
       case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
