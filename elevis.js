@@ -10,6 +10,7 @@ const {
   Channel,
   TextChannel,
   MessageAttachment,
+  MessageEmbed,
 } = require("discord.js");
 const { cp } = require("fs");
 const { token } = require("./config.json");
