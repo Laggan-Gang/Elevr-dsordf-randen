@@ -15,8 +15,6 @@ const {
 const { cp } = require("fs");
 const { token } = require("./config.json");
 const bigData = require("./statCollector");
-const axios = require("axios");
-const { laggStatsBaseUrl } = require("./config.json");
 
 // Create a new client instance
 const client = new Client({

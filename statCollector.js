@@ -1,7 +1,5 @@
 const { DiscordAPIError, MessageEmbed } = require("discord.js");
 const statRocket = require("./statRocket.js");
-const axios = require("axios");
-const { laggStatsBaseUrl } = require("./config.json");
 
 module.exports = {
   statCollector: async (meddelande) => {
@@ -45,7 +43,8 @@ module.exports = {
       winnerArr,
       participArr,
       optionalParticipArr,
-      charadeInstigator
+      charadeInstigator,
+      matchId
     );
     if (looksGood) {
       const finalArray = [winnerArr];
@@ -53,10 +52,8 @@ module.exports = {
       losersArray.forEach((team) => {
         finalArray.push(team);
       });
-      console.log(finalArray);
-      console.log(game);
-      console.log(matchId);
-      //do the maakep code
+      const res = await statRocket.statRocket(finalArray, 0, game, matchId);
+      console.log(res);
     } else {
       tråden.send(
         "Ok! Deleting the thread in 10 seconds and then we try again. Please be more careful this time :)"
@@ -178,7 +175,8 @@ async function prettyConfirmation(
   teamsArray,
   teamsArray2,
   teamsArrayForever,
-  charadeInstigator
+  charadeInstigator,
+  matchId
 ) {
   const winnerField = {
     name: "`🏆These are the winners!🏆`",
@@ -196,6 +194,9 @@ async function prettyConfirmation(
   loserArray.forEach((loseTeam) => {
     exampleEmbed.addField("`These also tried`", `${loseTeam.join("\n")}`, true);
   });
+  if (matchId !== undefined) {
+    exampleEmbed.setTitle(`LaggStats ${matchId}`);
+  }
 
   const confirmationMessage = await tråden.send({
     content: "Does this look right?",

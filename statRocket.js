@@ -26,13 +26,13 @@ module.exports = {
       responseType: "json",
     };
     try {
-      const fRes = await axios(request);
-      console.log(fRes);
+      const res = await axios(request);
+      console.log(res);
     } catch (error) {
       console.error(error);
     }
 
-    return fRes;
+    return res;
   },
 };
 
@@ -57,8 +57,4 @@ async function idRocket() {
     data: aliasesData,
     responseType: "json",
   };
-
-  const fRes = await axios(request);
-  console.log(fRes);
-  return fRes;
 }
