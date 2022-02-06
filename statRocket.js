@@ -27,12 +27,10 @@ module.exports = {
     };
     try {
       const res = await axios(request);
-      console.log(res);
+      return res;
     } catch (error) {
       console.error(error);
     }
-
-    return res;
   },
 };
 
