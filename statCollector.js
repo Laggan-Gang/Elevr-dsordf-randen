@@ -1,13 +1,18 @@
-//En message collector
-//En thread intent
-
 const { DiscordAPIError, MessageEmbed } = require("discord.js");
+const statRocket = require("./statRocket.js");
+const axios = require("axios");
+const { laggStatsBaseUrl } = require("./config.json");
 
 module.exports = {
   statCollector: async (meddelande) => {
-    const arr = meddelande.content.split(" ");
-    const game = kapitalisera(arr[1]);
-    const matchId = arr[2];
+    const charadeInstigator = meddelande.author.id;
+    //"!stat dota 2, D21"
+    //remove 6 first characters
+    //split at comma SPACE
+    const cleanMessage = meddelande.content.slice(6);
+    const arr = cleanMessage.split(", ");
+    const game = kapitalisera(arr[0]);
+    const matchId = arr[1];
     if (typeof game === "undefined") {
       meddelande.reply(
         "Please specify what game you're looking to LaggStat by typing '!big *example*'"
@@ -23,47 +28,83 @@ module.exports = {
       autoArchiveDuration: 60,
       reason: `${trådNamn}`,
     });
-
-    const filter = (m) => m.author.id == meddelande.author.id;
-    const winnerArr = await openingQuery(tråden, filter, game);
-    const participArr = await followUpQuestion(tråden, winnerArr, filter);
-    const optionalParticipArr = await interrogationIntensifies(tråden, filter);
-    prettyConfirmation(
+    //tråden is used as to send messages, charadeInstigator is used for the filters
+    const winnerArr = await openingQuery(tråden, charadeInstigator, game);
+    const participArr = await followUpQuestion(
+      tråden,
+      winnerArr,
+      charadeInstigator
+    );
+    const optionalParticipArr = await interrogationIntensifies(
+      tråden,
+      charadeInstigator
+    );
+    const looksGood = await prettyConfirmation(
       tråden,
       game,
       winnerArr,
       participArr,
-      optionalParticipArr
+      optionalParticipArr,
+      charadeInstigator
     );
+    if (looksGood) {
+      const finalArray = [winnerArr];
+      const losersArray = GATTAI(participArr, optionalParticipArr);
+      losersArray.forEach((team) => {
+        finalArray.push(team);
+      });
+      console.log(finalArray);
+      console.log(game);
+      console.log(matchId);
+      //do the maakep code
+    } else {
+      tråden.send(
+        "Ok! Deleting the thread in 10 seconds and then we try again. Please be more careful this time :)"
+      );
+      setTimeout(() => {
+        tråden.delete();
+      }, 10_000);
+    }
   },
 };
+
+async function messageDeleter(meddelande) {
+  try {
+    await meddelande.delete();
+  } catch (error) {
+    console.error(error);
+  }
+}
 
 function kapitalisera(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 async function kapitalArray(array) {
-  let kapitaliserad = array.map((namn) => {
+  const kapitaliserad = array.map((namn) => {
     return kapitalisera(namn);
   });
   return kapitaliserad;
 }
 
-async function dataCollection(tråden, filter) {
+async function dataCollection(tråden, charadeInstigator, latestMessage) {
+  const filter = (m) => m.author.id == charadeInstigator;
   const teamCollector = await tråden.awaitMessages({
     filter,
     max: 1,
     time: 180_000,
     errors: ["time"],
   });
+  await messageDeleter(latestMessage);
   //Just prettying things up and returning it as an array
   return kapitalArray(teamCollector.first().content.split(" "));
 }
 
-async function yesOrNo(message) {
+async function yesOrNo(message, charadeInstigator) {
   const rFilter = (reaction, user) => {
     return (
       !user.bot &&
+      user.id === charadeInstigator &&
       (reaction.emoji.name === "✅" || reaction.emoji.name === "❎")
     );
   };
@@ -83,14 +124,21 @@ async function yesOrNo(message) {
   }
 }
 
-async function someFuckingFiestaHereIGuess(tråden, filter) {
-  await tråden.send("Who were on the next team?");
-  const morePlayers = await dataCollection(tråden, filter);
+async function someFuckingFiestaHereIGuess(tråden, charadeInstigator) {
+  const latestMessage = await tråden.send("Who were on the next team?");
+  const morePlayers = await dataCollection(
+    tråden,
+    charadeInstigator,
+    latestMessage
+  );
   //Create an array to push each new supplied team into array
   const teamsForever = [];
   teamsForever.push(morePlayers);
   //Do it over again to ask and see if we get more players
-  const blackSiteResults = await interrogationIntensifies(tråden, filter);
+  const blackSiteResults = await interrogationIntensifies(
+    tråden,
+    charadeInstigator
+  );
   //Since we will eventually return undefined when we break the loop, we make sure it
   //isn't added to our array
   if (blackSiteResults !== undefined) {
@@ -101,16 +149,27 @@ async function someFuckingFiestaHereIGuess(tråden, filter) {
   }
 }
 
-async function interrogationIntensifies(tråden, filter) {
+async function interrogationIntensifies(tråden, charadeInstigator) {
   const botMeddelande = await tråden.send(
     `Would you like to add additional teams?`
   );
-  const yN = await yesOrNo(botMeddelande);
+  const yN = await yesOrNo(botMeddelande, charadeInstigator);
+  await messageDeleter(botMeddelande);
   if (yN) {
-    return someFuckingFiestaHereIGuess(tråden, filter);
+    return someFuckingFiestaHereIGuess(tråden, charadeInstigator);
   } else {
     return;
   }
+}
+
+function GATTAI(array1, array2) {
+  const loserArray = [array1];
+  if (Array.isArray(array2)) {
+    array2.forEach((team) => {
+      loserArray.push(team);
+    });
+  }
+  return loserArray;
 }
 
 async function prettyConfirmation(
@@ -118,20 +177,14 @@ async function prettyConfirmation(
   game,
   teamsArray,
   teamsArray2,
-  teamsArrayForever
+  teamsArrayForever,
+  charadeInstigator
 ) {
   const winnerField = {
-    name: "🏆These are the winners!🏆",
-    value: teamsArray.join("\n"),
+    name: "`🏆These are the winners!🏆`",
+    value: `${teamsArray.join("\n")}`,
   };
-  //this feels ugly
-  let loserArray = [teamsArray2];
-  //loserArray.push(teamsArray2);
-  if (Array.isArray(teamsArrayForever)) {
-    teamsArrayForever.forEach((team) => {
-      loserArray.push(team);
-    });
-  }
+  const loserArray = GATTAI(teamsArray2, teamsArrayForever);
   const exampleEmbed = new MessageEmbed()
     .setColor("#0099ff")
     .setTitle("LaggStats")
@@ -141,34 +194,35 @@ async function prettyConfirmation(
     .setFooter("Please react to confirm or deny");
 
   loserArray.forEach((loseTeam) => {
-    exampleEmbed.addField("These also tried", loseTeam.join("\n"), true);
+    exampleEmbed.addField("`These also tried`", `${loseTeam.join("\n")}`, true);
   });
 
   const confirmationMessage = await tråden.send({
     content: "Does this look right?",
     embeds: [exampleEmbed],
   });
-  const yN = await yesOrNo(confirmationMessage);
+  const yN = await yesOrNo(confirmationMessage, charadeInstigator);
   if (yN) {
-    tråden.send("Coolio ;)");
+    return true;
   } else {
+    return false;
   }
 }
 
-async function openingQuery(tråden, filter, game) {
-  await tråden.send(
+async function openingQuery(tråden, charadeInstigator, game) {
+  const latestMessage = await tråden.send(
     `Happy to help you report the results from the ${game} match! What players were on the winning team?`
   );
-  return await dataCollection(tråden, filter);
+  return await dataCollection(tråden, charadeInstigator, latestMessage);
 }
 
-async function followUpQuestion(tråden, teamsArray, filter) {
-  await tråden.send(
+async function followUpQuestion(tråden, teamsArray, charadeInstigator) {
+  const latestMessage = await tråden.send(
     `Okay! So ${teamsArray.join(
       " & "
     )} were on the winning team. Who were on the other team?`
   );
-  return await dataCollection(tråden, filter);
+  return await dataCollection(tråden, charadeInstigator, latestMessage);
 }
 
 //Thread creation

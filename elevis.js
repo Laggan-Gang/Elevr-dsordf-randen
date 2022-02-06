@@ -15,6 +15,8 @@ const {
 const { cp } = require("fs");
 const { token } = require("./config.json");
 const bigData = require("./statCollector");
+const axios = require("axios");
+const { laggStatsBaseUrl } = require("./config.json");
 
 // Create a new client instance
 const client = new Client({
@@ -55,14 +57,16 @@ client.on("messageCreate", async (meddelande) => {
 
   if (!meddelande.author.bot) {
     switch (true) {
-      case meddelande.content.startsWith("!big"):
+      case meddelande.content.startsWith("!stat"):
         await bigData.statCollector(meddelande);
         break;
 
       case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
-      case meddelande.type === "REPLY":
+      case meddelande.type === "REPLY" ||
+        meddelande.content.toLowerCase().startsWith("roll") ||
+        meddelande.content.toLowerCase().startsWith("roll"):
         await elevRådsOrdförande(meddelande);
         break;
       case meddelande.content.toLocaleLowerCase() === "pang!":
