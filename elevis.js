@@ -138,6 +138,7 @@ async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
 }
 
 async function elevRådsOrdförande(meddelande, brottet) {
+  varningar++;
   let dravel = meddelande.content.toLocaleLowerCase();
   let resten = meddelande.content.slice(5);
   let brottsling = meddelande.mentions.repliedUser;
@@ -147,19 +148,11 @@ async function elevRådsOrdförande(meddelande, brottet) {
   }
   if (dravel.startsWith("varning")) {
     brottet.reply(
-      "Det här är INTE acceptabelt beteende " +
-        meddelande.mentions.repliedUser.toString() +
-        "! Du kan se det här som en formell varning och jag hoppas *innerligt* att du funderar både en och två gånger innan du postar " +
-        bevis +
-        "igen!"
+      `Det här är INTE acceptabelt beteende ${meddelande.mentions.repliedUser.toString()}! Du kan se det här som en formell varning och jag hoppas *innerligt* att du funderar både en och två gånger innan du postar ${bevis}igen! Det här är varning nummer ${varningar}`
     );
   } else if (dravel.startsWith("warning")) {
     brottet.reply(
-      "This is NOT acceptable behaviour " +
-        meddelande.mentions.repliedUser.toString() +
-        "! You can consider this a formal warning and I *sincerely* hope you will think twice about posting " +
-        bevis +
-        "again!"
+      `This is NOT acceptable behaviour ${meddelande.mentions.repliedUser.toString()}! You can consider this a formal warning and I *sincerely* hope you will think twice about posting ${bevis}again! This is warning number ${varningar}`
     );
   }
 }
