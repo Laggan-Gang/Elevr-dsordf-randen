@@ -62,13 +62,15 @@ client.on("messageCreate", async (meddelande) => {
       case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
-      case meddelande.type === "REPLY" ||
-        meddelande.content.toLowerCase().startsWith("roll") ||
-        meddelande.content.toLowerCase().startsWith("roll"):
-        const brottet = await meddelande.channel.messages.fetch(
+      case meddelande.type === "REPLY":
+        let brottet = await meddelande.channel.messages.fetch(
           meddelande.reference.messageId
         );
         await elevRådsOrdförande(meddelande, brottet);
+        break;
+      case meddelande.content.toLowerCase().startsWith("roll") ||
+        meddelande.content.toLowerCase().startsWith("role"):
+        await roleAssign(meddelande);
         break;
       case meddelande.content.toLocaleLowerCase() === "pang!":
         if (meddelande.member.voice.channel !== null) {
@@ -160,6 +162,11 @@ async function elevRådsOrdförande(meddelande, brottet) {
         "again!"
     );
   }
+}
+
+async function roleAssign(meddelande) {
+  let dravel = meddelande.content.toLocaleLowerCase();
+  let resten = meddelande.content.slice(5);
   if (dravel.startsWith("roll")) {
     if (meddelande.channel.id == "539847809004994560") {
       let role = meddelande.guild.roles.cache.find(
@@ -256,5 +263,6 @@ async function elevRådsOrdförande(meddelande, brottet) {
     }
   }
 }
+
 // Login to Discord with your client's token this should always go last I guess?
 client.login(token);
