@@ -65,7 +65,10 @@ client.on("messageCreate", async (meddelande) => {
       case meddelande.type === "REPLY" ||
         meddelande.content.toLowerCase().startsWith("roll") ||
         meddelande.content.toLowerCase().startsWith("roll"):
-        await elevRådsOrdförande(meddelande);
+        const brottet = await meddelande.channel.messages.fetch(
+          meddelande.reference.messageId
+        );
+        await elevRådsOrdförande(meddelande, brottet);
         break;
       case meddelande.content.toLocaleLowerCase() === "pang!":
         if (meddelande.member.voice.channel !== null) {
@@ -132,13 +135,10 @@ async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
   }
 }
 
-async function elevRådsOrdförande(meddelande) {
+async function elevRådsOrdförande(meddelande, brottet) {
   let dravel = meddelande.content.toLocaleLowerCase();
   let resten = meddelande.content.slice(5);
   let brottsling = meddelande.mentions.repliedUser;
-  let brottet = await meddelande.channel.messages.fetch(
-    meddelande.reference.messageId
-  );
   var bevis = "";
   if (brottet.content !== "") {
     bevis = '"' + brottet.content + '" ';
