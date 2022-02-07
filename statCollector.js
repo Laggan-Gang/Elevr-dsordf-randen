@@ -168,8 +168,7 @@ async function someFuckingFiestaHereIGuess(tråden, charadeInstigator) {
     latestMessage
   );
   //Create an array to push each new supplied team into array
-  const teamsForever = [];
-  teamsForever.push(morePlayers);
+  const teamsForever = [morePlayers];
   //Do it over again to ask and see if we get more players
   const blackSiteResults = await interrogationIntensifies(
     tråden,
