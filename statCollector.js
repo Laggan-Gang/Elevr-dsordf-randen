@@ -11,13 +11,19 @@ module.exports = {
     const arr = cleanMessage.split(", ");
     const game = kapitalisera(arr[0]);
     const matchId = arr[1];
-    if (typeof game === "undefined") {
-      meddelande.reply(
-        "Please specify what game you're looking to LaggStat by typing '!big *example*'. If you want to add an optional matchId, you can type !big *example*, *matchId*"
+    console.log(game);
+    if (game === "") {
+      await meddelande.reply(
+        "Please specify what game you're looking to LaggStat by typing `!stat *example game*`. If you want to add an optional matchId, you can type `!stat *example*, *matchId*`"
       );
       return;
     } else if (game.toLowerCase().includes("example")) {
-      meddelande.reply("Very clever wow haha great joke >:(");
+      await meddelande.reply("Very clever wow haha great joke >:(");
+      return;
+    } else if (meddelande.content.includes("<@")) {
+      meddelande.reply(
+        "There's no need to try to add players right now, that comes later :). Start off by typing `!stat *game you want to record stats for*`"
+      );
       return;
     }
     const trådNamn = `The ${game} Stat Collection`;
