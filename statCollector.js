@@ -13,14 +13,14 @@ module.exports = {
     const matchId = arr[1];
     if (typeof game === "undefined") {
       meddelande.reply(
-        "Please specify what game you're looking to LaggStat by typing '!big *example*'"
+        "Please specify what game you're looking to LaggStat by typing '!big *example*'. If you want to add an optional matchId, you can type !big *example*, *matchId*"
       );
       return;
     } else if (game.toLowerCase().includes("example")) {
       meddelande.reply("Very clever wow haha great joke >:(");
       return;
     }
-    const trådNamn = `The ${meddelande.member.displayName} Stat Collection`;
+    const trådNamn = `The ${game} Stat Collection`;
     const tråden = await meddelande.channel.threads.create({
       name: trådNamn,
       autoArchiveDuration: 60,
@@ -46,24 +46,63 @@ module.exports = {
       charadeInstigator,
       matchId
     );
-    if (looksGood) {
-      const finalArray = [winnerArr];
-      const losersArray = GATTAI(participArr, optionalParticipArr);
-      losersArray.forEach((team) => {
-        finalArray.push(team);
-      });
-      const res = await statRocket.statRocket(finalArray, 0, game, matchId);
-      console.log(res);
-    } else {
-      tråden.send(
-        "Ok! Deleting the thread in 10 seconds and then we try again. Please be more careful this time :)"
-      );
-      setTimeout(() => {
-        tråden.delete();
-      }, 10_000);
-    }
+    await wrapItUp(
+      looksGood,
+      winnerArr,
+      participArr,
+      optionalParticipArr,
+      game,
+      matchId,
+      tråden
+    );
+    return;
   },
 };
+
+async function wrapItUp(
+  looksGood,
+  winnerArr,
+  participArr,
+  optionalParticipArr,
+  game,
+  matchId,
+  tråden
+) {
+  if (looksGood) {
+    const finalArray = [winnerArr];
+    const losersArray = GATTAI(participArr, optionalParticipArr);
+    losersArray.forEach((team) => {
+      finalArray.push(team);
+    });
+    const res = await statRocket.statRocket(finalArray, 0, game, matchId);
+    if (res.status == "200") {
+      tråden.send("Stats confirmed! We're done :)");
+      return;
+    } else {
+      tråden.send(
+        "Whoops! Something got fucked. I'm deleting the thread and you can try again :)"
+      );
+      threadDeleter(tråden);
+      return;
+    }
+  } else {
+    tråden.send(
+      "Ok! Deleting the thread in 10 seconds and then we try again. Please be more careful this time :)"
+    );
+    threadDeleter(tråden);
+    return;
+  }
+}
+
+async function threadDeleter(thread) {
+  setTimeout(() => {
+    try {
+      thread.delete();
+    } catch (error) {
+      console.error(error);
+    }
+  }, 10_000);
+}
 
 async function messageDeleter(meddelande) {
   try {
