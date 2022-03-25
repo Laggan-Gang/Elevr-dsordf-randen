@@ -122,7 +122,7 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.vinstProcent).slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => `${index}.${m.member.displayName}`)
+        .map((m, index) => `${index}.${m.member.username}`)
         .join(`\\n`);
 
       return new MessageEmbed()
@@ -134,7 +134,7 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.totalGames).slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => `${index}.${m.member.displayName} `)
+        .map((m, index) => `${index}.${m.member.username} `)
         .join(`\\n`);
 
       return new MessageEmbed()
@@ -146,7 +146,7 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.vinst).slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => `${index}. ${m.member.displayName}`)
+        .map((m, index) => `${index}. ${m.member.username}`)
         .join(`\\n`);
 
       return new MessageEmbed()
