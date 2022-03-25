@@ -68,7 +68,7 @@ module.exports = {
   dotaWiener: async (meddelande) => {
     const playerId = meddelande.content.replace("!победител", "");
 
-    const { totalGames, vinstProcent } = await calculateDotaWiener(
+    const { totalGames, vinstProcent, vinst } = await calculateDotaWiener(
       playerId.trim()
     );
 
@@ -76,11 +76,11 @@ module.exports = {
 
     if (isDummaTik) {
       await meddelande.reply(
-        `You should win more games before you speak to me. But yeah ${vinstProcent}% is kinda low over ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} You should win more games before you speak to me. But yeah ${vinst} [${vinstProcent}%] is kinda low over ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     } else {
       await meddelande.reply(
-        `Glorious winner of ${vinstProcent}% of your ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} Glorious winner of ${vinst} [${vinstProcent}%] of your ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     }
   },

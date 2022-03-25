@@ -27,6 +27,7 @@ async function calculateDotaWiener(playerId) {
   return {
     vinstProcent: ((wins / playerStats.length) * 100).toFixed(),
     totalGames: playerStats.length,
+    vinst: wins
   };
 }
 
