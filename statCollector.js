@@ -97,15 +97,15 @@ module.exports = {
 
     const members = meddelande.guild.roles.cache
       .get("412260353699872768")
-      .members.map((m) => m.user);
+      .members;
 
     console.log(members);
     
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         // <@!157775827692421120>
-        const dotaStats = await calculateDotaWiener(`<@!${m.id}>`);
-        return { member: m, ...dotaStats };
+        const dotaStats = await calculateDotaWiener(m.toString());
+        return { member: m.user, ...dotaStats };
       })
     );
 
