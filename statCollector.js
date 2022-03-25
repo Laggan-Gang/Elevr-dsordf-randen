@@ -121,7 +121,7 @@ function createMessageEmbed(type, data) {
       );
 
       return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${smorgesbordType} peoples`)
+        .setTitle(`Smorgesbord for biggest ${type} peoples`)
         .addField("Top 10", listOfGods);
     }
 
@@ -133,7 +133,7 @@ function createMessageEmbed(type, data) {
       );
 
       return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${smorgesbordType} fiends`)
+        .setTitle(`Smorgesbord for biggest ${type} fiends`)
         .addField("Top 10", listOfGods);
     }
 
@@ -145,7 +145,7 @@ function createMessageEmbed(type, data) {
       );
 
       return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${smorgesbordType} vinst`)
+        .setTitle(`Smorgesbord for biggest ${type} vinst`)
         .addField("Top 10", listOfGods);
     }
   }
