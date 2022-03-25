@@ -8,6 +8,7 @@ const {
 const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
+const { matOchDryck } = require("./matOchDryck.js");
 
 module.exports = {
   statCollector: async (meddelande) => {
@@ -126,12 +127,22 @@ module.exports = {
       smorgesbordResponses.filter((m) => !isNaN(m.vinstProcent))
     );
 
+    const randos = [1, 2, 3, 4, 5].map((_) =>
+      getRandomNumber(matOchDryck.length)
+    );
+
     await meddelande.channel.send({
-      content: "Smorgesbord for today: ",
+      content: `Smorgesbord for today: ${randos
+        .map((i) => matOchDryck[i])
+        .join()}`,
       embeds: [message],
     });
   },
 };
+
+function getRandomNumber(max) {
+  return Math.floor(Math.random() * (max + 1));
+}
 function createMessageEmbed(type, data) {
   switch (type) {
     case "percent": {
