@@ -76,11 +76,11 @@ module.exports = {
 
     if (isDummaTik) {
       await meddelande.reply(
-        `${playerId} You should win more games before you speak to me. But yeah ${vinst} [${vinstProcent}%] is kinda low over ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${vinstProcent}%]\` is kinda low over \`${totalGames}\` Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     } else {
       await meddelande.reply(
-        `${playerId} Glorious winner of ${vinst} [${vinstProcent}%] of your ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} Glorious winner of \`${vinst}\ [${vinstProcent}%]\` of your \`${totalGames}\` Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     }
   },
