@@ -20,14 +20,16 @@ async function getPlayerStats(playerId, gameId) {
 }
 
 async function calculateDotaWiener(playerId) {
-  const playerStats = await getPlayerStats(playerId, "Dota 2");
+  const dStats = await getPlayerStats(playerId, "Dota");
+  const d2Stats = await getPlayerStats(playerId, "Dota 2");
+  const playerStats = dStats.concat(d2Stats);
 
   const wins = playerStats.filter((r) => r.win).length;
 
   return {
     vinstProcent: ((wins / playerStats.length) * 100).toFixed(),
     totalGames: playerStats.length,
-    vinst: wins
+    vinst: wins,
   };
 }
 
