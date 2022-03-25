@@ -129,7 +129,7 @@ function createMessageEmbed(type, data) {
   switch (type) {
     case "percent": {
       const topvinstPercent = data
-        .sort((m1, m2) => m1.vinstProcent - m2.vinstProcent)
+        .sort((m1, m2) => m2.vinstProcent - m1.vinstProcent)
         .slice(0, 10);
 
       const listOfGods = topvinstPercent
@@ -145,7 +145,7 @@ function createMessageEmbed(type, data) {
 
     case "total": {
       const topvinstPercent = data
-        .sort((m1, m2) => m1.totalGames - m2.totalGames)
+        .sort((m1, m2) => m2.totalGames - m1.totalGames)
         .slice(0, 10);
 
       const listOfGods = topvinstPercent
@@ -161,7 +161,7 @@ function createMessageEmbed(type, data) {
 
     case "vinst": {
       const totalGames = data
-        .sort((m1, m2) => m1.vinst - m2.vinst)
+        .sort((m1, m2) => m2.vinst - m1.vinst)
         .slice(0, 10);
 
       const listOfGods = totalGames
