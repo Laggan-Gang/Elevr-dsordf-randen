@@ -74,11 +74,11 @@ module.exports = {
 
     if (isDummaTik) {
       await meddelande.reply(
-        `You should win more games before you speak to me. But yeah ${dotaStats.vinstProcent}% is kinda low over ${totalGames}`
+        `You should win more games before you speak to me. But yeah ${dotaStats.vinstProcent}% is kinda low over ${totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     } else {
       await meddelande.reply(
-        `Glorious winner of ${vinstProcent}% of your ${dotaStats.totalGames} Laggan Dota 2 games.`
+        `Glorious winner of ${vinstProcent}% of your ${dotaStats.totalGames} Dota 2 inhouses that <@!224953719945560066> was in!.`
       );
     }
   },
