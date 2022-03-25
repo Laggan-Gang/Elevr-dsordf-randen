@@ -103,7 +103,7 @@ module.exports = {
     
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
-        const dotaStats = await calculateDotaWiener(m.id);
+        const dotaStats = await calculateDotaWiener(m.toString());
         return { member: m, ...dotaStats };
       })
     );
