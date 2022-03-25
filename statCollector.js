@@ -6,6 +6,7 @@ const {
 } = require("discord.js");
 const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
+const { dublettKollaren } = require("./dublettKollare.js");
 
 module.exports = {
   statCollector: async (meddelande) => {
@@ -31,6 +32,14 @@ module.exports = {
         "There's no need to try to add players right now, that comes later :). Start off by typing `!stat *game you want to record stats for*`"
       );
       return;
+    }
+    if (matchId) {
+      if (dublettKollaren(matchId)) {
+        meddelande.reply(
+          `The game \`\`\`${matchId}\`\`\` has already been registered! There's no need to cheat if you just play well.`
+        );
+        return;
+      }
     }
     const trådNamn = `The ${game} Stat Collection`;
     const tråden = await meddelande.channel.threads.create({
