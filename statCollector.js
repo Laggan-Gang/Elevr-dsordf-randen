@@ -3,6 +3,7 @@ const {
   MessageEmbed,
   Message,
   GuildMember,
+  Client,
 } = require("discord.js");
 const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
@@ -104,16 +105,17 @@ module.exports = {
 
     const smorgesbordType = smorgesbordMessageParams[1];
 
-    const yaposRole = await meddelande.guild.roles.fetch("412260353699872768", {
-      force: true,
-    });
-    const yapos = yaposRole.members.map((m) => m.user);
+    const yaposId = "412260353699872768";
+    const members = await meddelande.guild.members.fetch();
 
-    console.log(yapos);
+    const yaposMembers = members.filter((m) =>
+      m.roles.cache.some((r) => r.id === yaposId)
+    );
+
+    const yapos = yaposMembers.map((m) => m.user);
 
     const smorgesbordResponses = await Promise.all(
       yapos.map(async (m) => {
-        // <@!157775827692421120>
         const dotaStats = await calculateDotaWiener(`<@!${m.id}>`);
         return { member: m, ...dotaStats };
       })

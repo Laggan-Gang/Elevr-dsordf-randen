@@ -64,7 +64,7 @@ client.on("messageCreate", async (meddelande) => {
         break;
 
       case meddelande.content.startsWith("!smorgesbord"):
-        await bigData.smorgesbord(meddelande);        
+        await bigData.smorgesbord(meddelande, client);        
         break;
 
       case meddelande.content.startsWith("<@"):
