@@ -265,7 +265,7 @@ async function prettyConfirmation(
 
 async function openingQuery(tråden, charadeInstigator, game) {
   const latestMessage = await tråden.send(
-    `Happy to help you report the results from the ${game} match! What players were on the winning team?`
+    `Happy to help you report the results from the ${game} match! What player/s (if multiple, separated by spaces) were on the winning team?`
   );
   return await dataCollection(tråden, charadeInstigator, latestMessage);
 }
