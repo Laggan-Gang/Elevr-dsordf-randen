@@ -117,8 +117,8 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.vinstProcent).slice(0, 10);
 
       const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}.${m.member.displayName} \\n`
-      );
+        (m, index) => `${index}.${m.member.displayName}`
+      ).join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} peoples`)
@@ -129,8 +129,8 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.totalGames).slice(0, 10);
 
       const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}.${m.member.displayName} \\n`
-      );
+        (m, index) => `${index}.${m.member.displayName} `
+      ).join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} fiends`)
@@ -141,8 +141,8 @@ function createMessageEmbed(type, data) {
       const topvinstPercent = data.sort((s) => s.vinst).slice(0, 10);
 
       const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}.${m.member.displayName} \\n`
-      );
+        (m, index) => `${index}. ${m.member.displayName}`
+      ).join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} vinst`)
