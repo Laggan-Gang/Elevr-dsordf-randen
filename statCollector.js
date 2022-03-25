@@ -120,7 +120,7 @@ module.exports = {
     const message = createMessageEmbed(smorgesbordType, smorgesbordResponses);
 
     await meddelande.channel.send({
-      content: "",
+      content: "Smorgesbord for today: ",
       embeds: [message],
     });
   },
