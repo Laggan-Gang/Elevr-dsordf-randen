@@ -24,7 +24,7 @@ async function calculateDotaWiener(playerId) {
 
   const wins = playerStats.filter((r) => r.win).length;
 
-  return (wins / playerStats.length) * 100;
+  return {vinstProcent: ((wins / playerStats.length) * 100).toFixed(), totalGames: playerStats.length};
 }
 
 module.exports = {

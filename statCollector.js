@@ -66,12 +66,22 @@ module.exports = {
   },
 
   dotaWiener: async (meddelande) => {
+    const playerId = meddelande.content.replace("!победител", "");
 
-    const playerId = meddelande.content.replace('!победител', '');
+    const dotaStats = await calculateDotaWiener(playerId.trim());
 
-    const vinstProcent = await calculateDotaWiener(playerId.trim());
-    await meddelande.reply(`Glorious winner of ${vinstProcent}% of your laggan Dota 2 games.`)
-  }
+    const isDummaTik = dotaStats.vinstProcent < 50;
+
+    if (isDummaTik) {
+      await meddelande.reply(
+        `You should win more games before you speak to me. But yeah ${dotaStats.vinstProcent}% is kinda low over ${totalGames}`
+      );
+    } else {
+      await meddelande.reply(
+        `Glorious winner of ${vinstProcent}% of your ${dotaStats.totalGames} Laggan Dota 2 games.`
+      );
+    }
+  },
 };
 
 async function wrapItUp(
