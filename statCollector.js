@@ -112,7 +112,7 @@ module.exports = {
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         // <@!157775827692421120>
-        const dotaStats = await calculateDotaWiener(`<@!${m}>`);
+        const dotaStats = await calculateDotaWiener(`<@!${m.id}>`);
         return { member: m, ...dotaStats };
       })
     );
@@ -134,7 +134,7 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => `${index + 1}.${m.username} - ${m.vinstProcent} `
+          (m, index) => `${index + 1}.${m.member.username} - ${m.vinstProcent} `
         )
         .join("\n");
 
@@ -150,7 +150,7 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => ` ${index + 1}.${m.username} - ${m.totalGames} `
+          (m, index) => ` ${index + 1}.${m.member.username} - ${m.totalGames} `
         )
         .join("\n");
 
@@ -165,7 +165,7 @@ function createMessageEmbed(type, data) {
         .slice(0, 10);
 
       const listOfGods = totalGames
-        .map((m, index) => `${index + 1}.${m.username} - ${m.vinst} `)
+        .map((m, index) => `${index + 1}.${m.member.username} - ${m.vinst} `)
         .join("\n");
 
       return new MessageEmbed()
