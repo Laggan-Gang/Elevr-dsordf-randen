@@ -121,7 +121,10 @@ module.exports = {
       })
     );
 
-    const message = createMessageEmbed(smorgesbordType, smorgesbordResponses);
+    const message = createMessageEmbed(
+      smorgesbordType,
+      smorgesbordResponses.filter((m) => !isNaN(m.vinstProcent))
+    );
 
     await meddelande.channel.send({
       content: "Smorgesbord for today: ",
