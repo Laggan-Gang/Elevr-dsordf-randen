@@ -100,7 +100,7 @@ module.exports = {
       .members.map((m) => m.user);
 
     const smorgesbordResponses = await Promise.all(
-      members.map((m) => {
+      members.map(async (m) => {
         const dotaStats = await calculateDotaWiener(m.id);
         return { member: m, ...dotaStats };
       })
