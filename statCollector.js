@@ -105,14 +105,14 @@ module.exports = {
     const smorgesbordType = smorgesbordMessageParams[1];
 
     const members =
-      meddelande.guild.roles.cache.get("412260353699872768").members;
+      meddelande.guild.roles.cache.get("412260353699872768").members.map(m=> m.user);
 
     console.log(members);
 
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         // <@!157775827692421120>
-        const dotaStats = await calculateDotaWiener(m.toString());
+        const dotaStats = await calculateDotaWiener(`<@!${m}>`);
         return { member: m.user, ...dotaStats };
       })
     );
@@ -160,11 +160,11 @@ function createMessageEmbed(type, data) {
     }
 
     case "vinst": {
-      const topvinstPercent = data
-        .sort((m1, m2) => m1.totalGames - m2.totalGames)
+      const totalGames = data
+        .sort((m1, m2) => m1.vinst - m2.vinst)
         .slice(0, 10);
 
-      const listOfGods = topvinstPercent
+      const listOfGods = totalGames
         .map((m, index) => `${index + 1}.${m.member.username} - ${m.vinst} `)
         .join("\n");
 
