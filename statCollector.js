@@ -113,7 +113,7 @@ module.exports = {
       members.map(async (m) => {
         // <@!157775827692421120>
         const dotaStats = await calculateDotaWiener(`<@!${m}>`);
-        return { member: m.user, ...dotaStats };
+        return { member: m, ...dotaStats };
       })
     );
 
@@ -134,7 +134,7 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => `${index + 1}.${m.member.username} - ${m.vinstProcent} `
+          (m, index) => `${index + 1}.${m.username} - ${m.vinstProcent} `
         )
         .join("\n");
 
@@ -150,7 +150,7 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => ` ${index + 1}.${m.member.username} - ${m.totalGames} `
+          (m, index) => ` ${index + 1}.${m.username} - ${m.totalGames} `
         )
         .join("\n");
 
@@ -165,7 +165,7 @@ function createMessageEmbed(type, data) {
         .slice(0, 10);
 
       const listOfGods = totalGames
-        .map((m, index) => `${index + 1}.${m.member.username} - ${m.vinst} `)
+        .map((m, index) => `${index + 1}.${m.username} - ${m.vinst} `)
         .join("\n");
 
       return new MessageEmbed()
