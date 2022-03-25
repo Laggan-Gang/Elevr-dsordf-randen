@@ -95,12 +95,11 @@ module.exports = {
 
     const smorgesbordType = smorgesbordMessageParams[1];
 
-    const members = meddelande.guild.roles.cache
-      .get("412260353699872768")
-      .members;
+    const members =
+      meddelande.guild.roles.cache.get("412260353699872768").members;
 
     console.log(members);
-    
+
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         // <@!157775827692421120>
@@ -112,7 +111,7 @@ module.exports = {
     const message = createMessageEmbed(smorgesbordType, smorgesbordResponses);
 
     await meddelande.channel.send({
-      content: "Does this look right?",
+      content: "",
       embeds: [message],
     });
   },
@@ -120,10 +119,14 @@ module.exports = {
 function createMessageEmbed(type, data) {
   switch (type) {
     case "percent": {
-      const topvinstPercent = data.sort((s) => s.vinstProcent).slice(0, 10);
+      const topvinstPercent = data
+        .sort((m1, m2) => m1.vinstProcent - m2.vinstProcent)
+        .slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => `${index}.${m.member.username} - ${m.vinstProcent} `)
+        .map(
+          (m, index) => `${index + 1}.${m.member.username} - ${m.vinstProcent} `
+        )
         .join("\n");
 
       return new MessageEmbed()
@@ -132,10 +135,14 @@ function createMessageEmbed(type, data) {
     }
 
     case "total": {
-      const topvinstPercent = data.sort((s) => s.totalGames).slice(0, 10);
+      const topvinstPercent = data
+        .sort((m1, m2) => m1.totalGames - m2.totalGames)
+        .slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => ` ${index}.${m.member.username} - ${m.totalGames} `)
+        .map(
+          (m, index) => ` ${index + 1}.${m.member.username} - ${m.totalGames} `
+        )
         .join("\n");
 
       return new MessageEmbed()
@@ -144,10 +151,12 @@ function createMessageEmbed(type, data) {
     }
 
     case "vinst": {
-      const topvinstPercent = data.sort((s) => s.vinst).slice(0, 10);
+      const topvinstPercent = data
+        .sort((m1, m2) => m1.totalGames - m2.totalGames)
+        .slice(0, 10);
 
       const listOfGods = topvinstPercent
-        .map((m, index) => `${index}.${m.member.username} - ${m.vinst} `)
+        .map((m, index) => `${index + 1}.${m.member.username} - ${m.vinst} `)
         .join("\n");
 
       return new MessageEmbed()
@@ -155,13 +164,6 @@ function createMessageEmbed(type, data) {
         .addField("Top 10", listOfGods);
     }
   }
-
-  const topNumberOfVins = smorgesbordResponses
-    .sort((s) => s.vinst)
-    .slice(0, 10);
-  const smorgesbordFiends = smorgesbordResponses
-    .sort((s) => s.totalGames)
-    .slice(0, 10);
 }
 
 async function wrapItUp(
