@@ -99,6 +99,8 @@ module.exports = {
       .get("412260353699872768")
       .members.map((m) => m.user);
 
+    console.log(members);
+    
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         const dotaStats = await calculateDotaWiener(m.id);
@@ -108,7 +110,10 @@ module.exports = {
 
     const message = createMessageEmbed(smorgesbordType, smorgesbordResponses);
 
-    await meddelande.channel.send(message);
+    await meddelande.channel.send({
+      content: "Does this look right?",
+      embeds: [message],
+    });
   },
 };
 function createMessageEmbed(type, data) {
@@ -116,9 +121,9 @@ function createMessageEmbed(type, data) {
     case "percent": {
       const topvinstPercent = data.sort((s) => s.vinstProcent).slice(0, 10);
 
-      const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}.${m.member.displayName}`
-      ).join(`\\n`);
+      const listOfGods = topvinstPercent
+        .map((m, index) => `${index}.${m.member.displayName}`)
+        .join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} peoples`)
@@ -128,9 +133,9 @@ function createMessageEmbed(type, data) {
     case "total": {
       const topvinstPercent = data.sort((s) => s.totalGames).slice(0, 10);
 
-      const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}.${m.member.displayName} `
-      ).join(`\\n`);
+      const listOfGods = topvinstPercent
+        .map((m, index) => `${index}.${m.member.displayName} `)
+        .join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} fiends`)
@@ -140,9 +145,9 @@ function createMessageEmbed(type, data) {
     case "vinst": {
       const topvinstPercent = data.sort((s) => s.vinst).slice(0, 10);
 
-      const listOfGods = topvinstPercent.map(
-        (m, index) => `${index}. ${m.member.displayName}`
-      ).join(`\\n`);
+      const listOfGods = topvinstPercent
+        .map((m, index) => `${index}. ${m.member.displayName}`)
+        .join(`\\n`);
 
       return new MessageEmbed()
         .setTitle(`Smorgesbord for biggest ${type} vinst`)
