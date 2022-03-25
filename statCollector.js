@@ -34,9 +34,9 @@ module.exports = {
       return;
     }
     if (matchId) {
-      if (dublettKollaren(matchId)) {
+      if (await dublettKollaren(matchId)) {
         meddelande.reply(
-          `The game \`\`\`${matchId}\`\`\` has already been registered! There's no need to cheat if you just play well.`
+          `The game \`\`${matchId}\`\` has already been registered! There's no need to cheat if you just play well.`
         );
         return;
       }
@@ -104,12 +104,11 @@ module.exports = {
 
     const smorgesbordType = smorgesbordMessageParams[1];
 
-    const members = meddelande.guild.roles.cache
-      .get("412260353699872768")
-      .members;
+    const members =
+      meddelande.guild.roles.cache.get("412260353699872768").members;
 
     console.log(members);
-    
+
     const smorgesbordResponses = await Promise.all(
       members.map(async (m) => {
         // <@!157775827692421120>
