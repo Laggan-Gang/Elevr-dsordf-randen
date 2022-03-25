@@ -1,4 +1,9 @@
-const { DiscordAPIError, MessageEmbed } = require("discord.js");
+const {
+  DiscordAPIError,
+  MessageEmbed,
+  Message,
+  GuildMember,
+} = require("discord.js");
 const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
 
@@ -84,7 +89,74 @@ module.exports = {
       );
     }
   },
+
+  smorgesbord: async (meddelande) => {
+    const smorgesbordMessageParams = meddelande.content.split(" ");
+
+    const smorgesbordType = smorgesbordMessageParams[1];
+
+    const members = meddelande.guild.roles.cache
+      .get("412260353699872768")
+      .members.map((m) => m.user);
+
+    const smorgesbordResponses = await Promise.all(
+      members.map((m) => {
+        const dotaStats = await calculateDotaWiener(m.id);
+        return { member: m, ...dotaStats };
+      })
+    );
+
+    const message = createMessageEmbed(smorgesbordType, smorgesbordResponses);
+
+    await meddelande.channel.send(message);
+  },
 };
+function createMessageEmbed(type, data) {
+  switch (type) {
+    case "percent": {
+      const topvinstPercent = data.sort((s) => s.vinstProcent).slice(0, 10);
+
+      const listOfGods = topvinstPercent.map(
+        (m, index) => `${index}.${m.member.displayName} \\n`
+      );
+
+      return new MessageEmbed()
+        .setTitle(`Smorgesbord for biggest ${smorgesbordType} peoples`)
+        .addField("Top 10", listOfGods);
+    }
+
+    case "total": {
+      const topvinstPercent = data.sort((s) => s.totalGames).slice(0, 10);
+
+      const listOfGods = topvinstPercent.map(
+        (m, index) => `${index}.${m.member.displayName} \\n`
+      );
+
+      return new MessageEmbed()
+        .setTitle(`Smorgesbord for biggest ${smorgesbordType} fiends`)
+        .addField("Top 10", listOfGods);
+    }
+
+    case "vinst": {
+      const topvinstPercent = data.sort((s) => s.vinst).slice(0, 10);
+
+      const listOfGods = topvinstPercent.map(
+        (m, index) => `${index}.${m.member.displayName} \\n`
+      );
+
+      return new MessageEmbed()
+        .setTitle(`Smorgesbord for biggest ${smorgesbordType} vinst`)
+        .addField("Top 10", listOfGods);
+    }
+  }
+
+  const topNumberOfVins = smorgesbordResponses
+    .sort((s) => s.vinst)
+    .slice(0, 10);
+  const smorgesbordFiends = smorgesbordResponses
+    .sort((s) => s.totalGames)
+    .slice(0, 10);
+}
 
 async function wrapItUp(
   looksGood,
