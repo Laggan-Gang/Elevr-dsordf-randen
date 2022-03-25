@@ -67,9 +67,9 @@ module.exports = {
 
   dotaWiener: async (meddelande) => {
 
-    const playerId = meddelande.content.replace('!dotaWiener', ' ');
+    const playerId = meddelande.content.replace('!dotaWiener', '');
 
-    const vinstProcent = await calculateDotaWiener(playerId);
+    const vinstProcent = await calculateDotaWiener(playerId.trim());
     await meddelande.reply(`Glorious winner of ${vinstProcent}% of your laggan Dota 2 games.`)
   }
 };
