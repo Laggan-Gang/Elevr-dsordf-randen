@@ -1,5 +1,6 @@
 const { DiscordAPIError, MessageEmbed } = require("discord.js");
 const statRocket = require("./statRocket.js");
+const { calculateDotaWiener } = require("./wienerchickendinner.js");
 
 module.exports = {
   statCollector: async (meddelande) => {
@@ -63,6 +64,14 @@ module.exports = {
     );
     return;
   },
+
+  dotaWiener: async (meddelande) => {
+
+    const playerId = meddelande.content.replace('!dotaWiener', ' ');
+
+    const vinstProcent = await calculateDotaWiener(playerId);
+    await meddelande.reply(`Glorious winner of ${vinstProcent}% of your laggan Dota 2 games.`)
+  }
 };
 
 async function wrapItUp(
