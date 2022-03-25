@@ -104,7 +104,9 @@ module.exports = {
 
     const smorgesbordType = smorgesbordMessageParams[1];
 
-    const yaposRole = await meddelande.guild.roles.fetch("412260353699872768");
+    const yaposRole = await meddelande.guild.roles.fetch("412260353699872768", {
+      force: true,
+    });
     const yapos = yaposRole.members.map((m) => m.user);
 
     console.log(yapos);
@@ -134,7 +136,8 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => `${index + 1}.${m.member.username} - ${m.vinstProcent} `
+          (m, index) =>
+            `${index + 1}.${m.member.username} - ${m.vinstProcent}% `
         )
         .join("\n");
 
