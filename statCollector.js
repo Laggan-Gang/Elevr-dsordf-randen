@@ -34,9 +34,9 @@ module.exports = {
       return;
     }
     if (matchId) {
-      if (dublettKollaren(matchId)) {
+      if (await dublettKollaren(matchId)) {
         meddelande.reply(
-          `The game \`\`\`${matchId}\`\`\` has already been registered! There's no need to cheat if you just play well.`
+          `The game \`\`${matchId}\`\` has already been registered! There's no need to cheat if you just play well.`
         );
         return;
       }
