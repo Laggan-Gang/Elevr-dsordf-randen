@@ -66,12 +66,13 @@ module.exports = {
   },
 
   dotaWiener: async (meddelande) => {
-
-    const playerId = meddelande.content.replace('!победител', '');
+    const playerId = meddelande.content.replace("!победител", "");
 
     const vinstProcent = await calculateDotaWiener(playerId.trim());
-    await meddelande.reply(`Glorious winner of ${vinstProcent}% of your laggan Dota 2 games.`)
-  }
+    await meddelande.reply(
+      `Glorious winner of ${vinstProcent}% of Laggan inhouses that <@!224953719945560066> was in!.`
+    );
+  },
 };
 
 async function wrapItUp(
