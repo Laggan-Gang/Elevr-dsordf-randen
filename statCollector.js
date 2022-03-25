@@ -132,10 +132,13 @@ module.exports = {
     );
 
     await meddelande.channel.send({
-      content: `Smorgesbord for today: ${randos
+      embeds: [
+        message
+        .setTimestamp()
+        .addField("Smorgesbord for today: ",`${randos
         .map((i) => matOchDryck[i])
-        .join()}`,
-      embeds: [message],
+        .join()}`)
+      ],
     });
   },
 };
