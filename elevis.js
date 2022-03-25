@@ -59,7 +59,7 @@ client.on("messageCreate", async (meddelande) => {
         await bigData.statCollector(meddelande);
         break;
       
-      case meddelande.content.startsWith("!dotaweiner"):
+      case meddelande.content.startsWith("!победител"):
         await bigData.dotaWiener(meddelande);
         break;
 
