@@ -104,13 +104,13 @@ module.exports = {
 
     const smorgesbordType = smorgesbordMessageParams[1];
 
-    const members =
-      meddelande.guild.roles.cache.get("412260353699872768").members.map(m=> m.user);
+    const yaposRole = await meddelande.guild.roles.fetch("412260353699872768");
+    const yapos = yaposRole.members.map((m) => m.user);
 
-    console.log(members);
+    console.log(yapos);
 
     const smorgesbordResponses = await Promise.all(
-      members.map(async (m) => {
+      yapos.map(async (m) => {
         // <@!157775827692421120>
         const dotaStats = await calculateDotaWiener(`<@!${m.id}>`);
         return { member: m, ...dotaStats };
