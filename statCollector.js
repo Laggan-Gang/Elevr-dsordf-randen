@@ -9,6 +9,7 @@ const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
 const { matOchDryck } = require("./matOchDryck.js");
+const {createSeededGenerator} = require("låna.js");
 
 module.exports = {
   statCollector: async (meddelande) => {
@@ -134,18 +135,24 @@ module.exports = {
     await meddelande.channel.send({
       embeds: [
         message
-        .setTimestamp()
-        .addField("Smorgesbord for today: ",`${randos
-        .map((i) => matOchDryck[i])
-        .join()}`)
+          .setTimestamp()
+          .addField(
+            "Smorgesbord for today: ",
+            `${randos.map((i) => matOchDryck[i]).join()}`
+          ),
       ],
     });
   },
 };
 
 function getRandomNumber(max) {
-  return Math.floor(Math.random() * (max + 1));
+  const seedOfToday = new Date().toDateString();
+
+  const getRandomNumber = createSeededGenerator(seedOfToday);
+
+  return Math.floor(getRandomNumber() * (max + 1));
 }
+
 function createMessageEmbed(type, data) {
   switch (type) {
     case "percent": {
@@ -156,7 +163,7 @@ function createMessageEmbed(type, data) {
       const listOfGods = topvinstPercent
         .map(
           (m, index) =>
-            `${index + 1}.${m.member.username} - ${m.vinstProcent}% `
+            `${index + 1}. ${m.member.username} - ${m.vinstProcent}% `
         )
         .join("\n");
 
@@ -172,7 +179,7 @@ function createMessageEmbed(type, data) {
 
       const listOfGods = topvinstPercent
         .map(
-          (m, index) => ` ${index + 1}.${m.member.username} - ${m.totalGames} `
+          (m, index) => ` ${index + 1}. ${m.member.username} - ${m.totalGames} `
         )
         .join("\n");
 
@@ -187,7 +194,7 @@ function createMessageEmbed(type, data) {
         .slice(0, 10);
 
       const listOfGods = totalGames
-        .map((m, index) => `${index + 1}.${m.member.username} - ${m.vinst} `)
+        .map((m, index) => `${index + 1}. ${m.member.username} - ${m.vinst} `)
         .join("\n");
 
       return new MessageEmbed()
