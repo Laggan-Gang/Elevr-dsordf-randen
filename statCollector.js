@@ -9,7 +9,7 @@ const statRocket = require("./statRocket.js");
 const { calculateDotaWiener } = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
 const { matOchDryck } = require("./matOchDryck.js");
-const {createSeededGenerator} = require("låna.js");
+const { createSeededGenerator } = require("lana.js");
 
 module.exports = {
   statCollector: async (meddelande) => {
