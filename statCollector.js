@@ -128,8 +128,11 @@ module.exports = {
       smorgesbordResponses.filter((m) => !isNaN(m.vinstProcent))
     );
 
+    const seedOfToday = new Date().toDateString();
+    const genereraRandom = createSeededGenerator(seedOfToday);
+
     const randos = [1, 2, 3, 4, 5].map((_) =>
-      getRandomNumber(matOchDryck.length)
+      getMaxRandomishNumber(matOchDryck.length, genereraRandom)
     );
 
     await meddelande.channel.send({
@@ -145,11 +148,7 @@ module.exports = {
   },
 };
 
-function getRandomNumber(max) {
-  const seedOfToday = new Date().toDateString();
-
-  const genereraRandom = createSeededGenerator(seedOfToday);
-
+function getMaxRandomishNumber(max, genereraRandom) {
   return Math.floor(genereraRandom() * (max + 1));
 }
 
