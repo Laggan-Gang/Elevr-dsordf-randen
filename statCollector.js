@@ -148,9 +148,9 @@ module.exports = {
 function getRandomNumber(max) {
   const seedOfToday = new Date().toDateString();
 
-  const getRandomNumber = createSeededGenerator(seedOfToday);
+  const genereraRandom = createSeededGenerator(seedOfToday);
 
-  return Math.floor(getRandomNumber() * (max + 1));
+  return Math.floor(genereraRandom() * (max + 1));
 }
 
 function createMessageEmbed(type, data) {
