@@ -141,7 +141,7 @@ module.exports = {
           .setTimestamp()
           .addField(
             "Smorgesbord for today: ",
-            `${randos.map((i) => matOchDryck[i]).join()}`
+            `${randos.map((i) => matOchDryck[i]).join().replace(`,`, ' ')}`
           ),
       ],
     });
