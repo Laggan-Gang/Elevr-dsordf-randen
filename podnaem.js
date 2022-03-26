@@ -51,5 +51,5 @@ function createSeededGenerator(seed) {
 }
 
 module.exports = {
-  createSeededGenerator,
+  createSeededGenerator
 };
