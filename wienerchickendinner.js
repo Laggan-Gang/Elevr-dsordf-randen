@@ -30,7 +30,7 @@ async function getPlayerStats(playerId, gameId) {
 
 async function calculateGameWiener(playerId, game) {
   let playerStats = [];
-  if (game === "Dota" || "Dota 2") {
+  if (game === "Dota" || game === "Dota 2") {
     const dStats = await getPlayerStats(playerId, "Dota");
     const d2Stats = await getPlayerStats(playerId, "Dota 2");
     playerStats = dStats.concat(d2Stats);
