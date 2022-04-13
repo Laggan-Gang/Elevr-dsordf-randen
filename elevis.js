@@ -33,6 +33,8 @@ const {
   AudioPlayer,
   AudioPlayerStatus,
 } = require("@discordjs/voice");
+const { commands } = require("./commands");
+const help = require("./help");
 
 let varningar = 0;
 
@@ -55,16 +57,24 @@ client.on("messageCreate", async (meddelande) => {
 
   if (!meddelande.author.bot) {
     switch (true) {
-      case meddelande.content.startsWith("!stat"):
+      case meddelande.content.startsWith(commands.stat.command):
         await bigData.statCollector(meddelande);
         break;
 
-      case meddelande.content.startsWith("!победител"):
-        await bigData.dotaWiener(meddelande);
+      case meddelande.content.toLowerCase() === commands.listGames.command:
+        await bigData.listGames(meddelande);
         break;
 
-      case meddelande.content.startsWith("!smorgesbord"):
-        await bigData.smorgesbord(meddelande, client);        
+      case meddelande.content.startsWith(commands.pobeditel.command):
+        await bigData.gameWiener(meddelande);
+        break;
+
+      case meddelande.content.startsWith(commands.smorgesbord.command):
+        await bigData.smorgesbord(meddelande, client);
+        break;
+
+      case meddelande.content.toLocaleLowerCase() === commands.help.command:
+        await help();
         break;
 
       case meddelande.content.startsWith("<@"):
@@ -76,11 +86,13 @@ client.on("messageCreate", async (meddelande) => {
         );
         await elevRådsOrdförande(meddelande, brottet);
         break;
-      case meddelande.content.toLowerCase().startsWith("roll") ||
-        meddelande.content.toLowerCase().startsWith("role"):
+      case meddelande.content.toLowerCase().startsWith(commands.role.command) ||
+        meddelande.content
+          .toLowerCase()
+          .startsWith(commands.role.alternativeCommand):
         await roleAssign(meddelande);
         break;
-      case meddelande.content.toLocaleLowerCase() === "pang!":
+      case meddelande.content.toLocaleLowerCase() === commands.pang.command:
         if (meddelande.member.voice.channel !== null) {
           await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
             meddelande

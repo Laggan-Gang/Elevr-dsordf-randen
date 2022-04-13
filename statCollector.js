@@ -1,12 +1,6 @@
-const {
-  DiscordAPIError,
-  MessageEmbed,
-  Message,
-  GuildMember,
-  Client,
-} = require("discord.js");
+const { MessageEmbed } = require("discord.js");
 const statRocket = require("./statRocket.js");
-const { calculateDotaWiener } = require("./wienerchickendinner.js");
+const { calculateGameWiener, getGames } = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
 const { matOchDryck } = require("./matOchDryck.js");
 const { createSeededGenerator } = require("./podnaem.js");
@@ -82,22 +76,26 @@ module.exports = {
     return;
   },
 
-  dotaWiener: async (meddelande) => {
-    const playerId = meddelande.content.replace("!победител", "");
+  gameWiener: async (meddelande) => {
+    const arguments = meddelande.content.replace("!победител", "").split(" ");
 
-    const { totalGames, vinstProcent, vinst } = await calculateDotaWiener(
-      playerId.trim()
+    const playerId = arguments[0];
+    const game = arguments[1] || "Dota";
+
+    const { totalGames, vinstProcent, vinst } = await calculateGameWiener(
+      playerId.trim(),
+      game
     );
 
     const isDummaTik = vinstProcent < 50;
 
     if (isDummaTik) {
       await meddelande.reply(
-        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${vinstProcent}%]\` is kinda low over \`${totalGames}\` Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${vinstProcent}%]\` is kinda low over \`${totalGames}\` !.`
       );
     } else {
       await meddelande.reply(
-        `${playerId} Glorious winner of \`${vinst}\ [${vinstProcent}%]\` of your \`${totalGames}\` Dota 2 inhouses that <@!224953719945560066> was in!.`
+        `${playerId} Glorious winner of \`${vinst}\ [${vinstProcent}%]\` of your \`${totalGames}\`!.`
       );
     }
   },
@@ -106,6 +104,8 @@ module.exports = {
     const smorgesbordMessageParams = meddelande.content.split(" ");
 
     const smorgesbordType = smorgesbordMessageParams[1];
+    const game = smorgesbordMessageParams[2] || "Dota";
+    const numberOfPeoples = smorgesbordMessageParams[3] || 10;
 
     const yaposId = "412260353699872768";
     const members = await meddelande.guild.members.fetch();
@@ -118,14 +118,16 @@ module.exports = {
 
     const smorgesbordResponses = await Promise.all(
       yapos.map(async (m) => {
-        const dotaStats = await calculateDotaWiener(`<@!${m.id}>`);
+        const dotaStats = await calculateGameWiener(`<@!${m.id}>`, game);
         return { member: m, ...dotaStats };
       })
     );
 
-    const message = createMessageEmbed(
+    const message = createLeaderbordEmbed(
       smorgesbordType,
-      smorgesbordResponses.filter((m) => !isNaN(m.vinstProcent))
+      smorgesbordResponses.filter(
+        (m) => !isNaN(m.vinstProcent).slice(0, numberOfPeoples)
+      )
     );
 
     const seedOfToday = new Date().toDateString();
@@ -146,18 +148,35 @@ module.exports = {
       ],
     });
   },
+
+  listGames: async (meddelande) => {
+    const games = await getGames();
+
+    const embed = new MessageEmbed()
+      .setTitle("Gameroos")
+      .addField(`I have consulted the archives and this is what I got`);
+
+    const gameFields = games.map((g, index) => ({
+      name: "",
+      field: `${index}. ${g}`,
+    }));
+
+    await meddelande.channel.send({
+      embeds: [embed.setTimestamp().addFields(gameFields)],
+    });
+  },
 };
 
 function getMaxRandomishNumber(max, genereraRandom) {
   return Math.floor(genereraRandom() * (max + 1));
 }
 
-function createMessageEmbed(type, data) {
+function createLeaderbordEmbed(type, data) {
   switch (type) {
     case "percent": {
-      const topvinstPercent = data
-        .sort((m1, m2) => m2.vinstProcent - m1.vinstProcent)
-        .slice(0, 10);
+      const topvinstPercent = data.sort(
+        (m1, m2) => m2.vinstProcent - m1.vinstProcent
+      );
 
       const listOfGods = topvinstPercent
         .map(
@@ -172,9 +191,9 @@ function createMessageEmbed(type, data) {
     }
 
     case "total": {
-      const topvinstPercent = data
-        .sort((m1, m2) => m2.totalGames - m1.totalGames)
-        .slice(0, 10);
+      const topvinstPercent = data.sort(
+        (m1, m2) => m2.totalGames - m1.totalGames
+      );
 
       const listOfGods = topvinstPercent
         .map(
@@ -188,9 +207,7 @@ function createMessageEmbed(type, data) {
     }
 
     case "vinst": {
-      const totalGames = data
-        .sort((m1, m2) => m2.vinst - m1.vinst)
-        .slice(0, 10);
+      const totalGames = data.sort((m1, m2) => m2.vinst - m1.vinst);
 
       const listOfGods = totalGames
         .map((m, index) => `${index + 1}. ${m.member.username} - ${m.vinst} `)
