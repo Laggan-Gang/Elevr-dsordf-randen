@@ -34,7 +34,7 @@ const {
   AudioPlayerStatus,
 } = require("@discordjs/voice");
 const { commands } = require("./commands");
-const help = require("./help");
+const { help } = require("./help");
 
 let varningar = 0;
 
