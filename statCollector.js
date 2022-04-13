@@ -123,7 +123,7 @@ module.exports = {
       })
     );
 
-    const message = createLeaderbordEmbed(
+    const listOfGods = getListOfGodsByType(
       smorgesbordType,
       smorgesbordResponses.filter(
         (m) => !isNaN(m.vinstProcent).slice(0, numberOfPeoples)
@@ -137,9 +137,13 @@ module.exports = {
       getMaxRandomishNumber(matOchDryck.length, genereraRandom)
     );
 
+    const embed = MessageEmbed()
+      .setTitle(`Smorgesbord for biggest ${type} peoples`)
+      .addField(`Top ${numberOfPeoples}`, listOfGods);
+
     await meddelande.channel.send({
       embeds: [
-        message
+        embed
           .setTimestamp()
           .addField(
             "Smorgesbord for today: ",
@@ -171,23 +175,19 @@ function getMaxRandomishNumber(max, genereraRandom) {
   return Math.floor(genereraRandom() * (max + 1));
 }
 
-function createLeaderbordEmbed(type, data) {
+function getListOfGodsByType(type, data) {
   switch (type) {
     case "percent": {
       const topvinstPercent = data.sort(
         (m1, m2) => m2.vinstProcent - m1.vinstProcent
       );
 
-      const listOfGods = topvinstPercent
+      return topvinstPercent
         .map(
           (m, index) =>
             `${index + 1}. ${m.member.username} - ${m.vinstProcent}% `
         )
         .join("\n");
-
-      return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${type} peoples`)
-        .addField("Top 10", listOfGods);
     }
 
     case "total": {
@@ -195,27 +195,19 @@ function createLeaderbordEmbed(type, data) {
         (m1, m2) => m2.totalGames - m1.totalGames
       );
 
-      const listOfGods = topvinstPercent
+      return topvinstPercent
         .map(
           (m, index) => ` ${index + 1}. ${m.member.username} - ${m.totalGames} `
         )
         .join("\n");
-
-      return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${type} fiends`)
-        .addField("Top 10", listOfGods);
     }
 
     case "vinst": {
       const totalGames = data.sort((m1, m2) => m2.vinst - m1.vinst);
 
-      const listOfGods = totalGames
+      return totalGames
         .map((m, index) => `${index + 1}. ${m.member.username} - ${m.vinst} `)
         .join("\n");
-
-      return new MessageEmbed()
-        .setTitle(`Smorgesbord for biggest ${type} vinst`)
-        .addField("Top 10", listOfGods);
     }
   }
 }
