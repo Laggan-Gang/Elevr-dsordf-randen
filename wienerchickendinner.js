@@ -2,7 +2,7 @@ const { laggStatsBaseUrl } = require("./config.json");
 const axios = require("axios");
 //@ts-check
 
-async function getPlayerStats(playerId, gameId) {
+async function getAxiosInternal() {
   const request = {
     baseURL: laggStatsBaseUrl,
     url: "result/all",
@@ -12,17 +12,31 @@ async function getPlayerStats(playerId, gameId) {
     },
     responseType: "json",
   };
-  const response = await axios(request);
+  return axios(request);
+}
 
+async function getGames() {
+  const response = await getAxiosInternal();
+
+  return new Set(response.data.map((bigData) => bigData.game));
+}
+
+async function getPlayerStats(playerId, gameId) {
+  const response = await getAxiosInternal();
   return response.data.filter(
     (r) => r.game === gameId && r.username === playerId
   );
 }
 
-async function calculateDotaWiener(playerId) {
-  const dStats = await getPlayerStats(playerId, "Dota");
-  const d2Stats = await getPlayerStats(playerId, "Dota 2");
-  const playerStats = dStats.concat(d2Stats);
+async function calculateGameWiener(playerId, game) {
+  let playerStats = [];
+  if (game === "Dota" || "Dota 2") {
+    const dStats = await getPlayerStats(playerId, "Dota");
+    const d2Stats = await getPlayerStats(playerId, "Dota 2");
+    playerStats = dStats.concat(d2Stats);
+  } else {
+    await getPlayerStats(playerId, game);
+  }
 
   const wins = playerStats.filter((r) => r.win).length;
 
@@ -34,5 +48,6 @@ async function calculateDotaWiener(playerId) {
 }
 
 module.exports = {
-  calculateDotaWiener,
+  calculateGameWiener,
+  getGames,
 };
