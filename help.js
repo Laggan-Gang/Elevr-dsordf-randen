@@ -6,7 +6,7 @@ module.exports = {
     const fields = Object.keys(commands).map((k) => {
       const command = commands[k];
       return {
-        name: `${command.command} ${command.alternativeCommand}`,
+        name: `${command.command} ${command.alternativeCommand || ""}`,
         value: command.helpText,
       };
     });
