@@ -168,7 +168,7 @@ module.exports = {
     .setTitle("Gameroos");
 
   games.forEach((game) => {
-    exampleEmbed.addField("This is a game: ", `${game}`, true);
+    exampleEmbed.addField("", `${game}`, false);
   });
 
     //const embed = new MessageEmbed()
