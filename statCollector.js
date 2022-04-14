@@ -170,7 +170,7 @@ module.exports = {
   //games.forEach((game) => {
   //  exampleEmbed.addField("", `${game}`, false);
   //});
-  exampleEmbed.addField("These are games", `${games.join("\n")}`, false);
+  exampleEmbed.addField("These are games", `${games.join("\n")}`, true);
  
 
     //const embed = new MessageEmbed()
