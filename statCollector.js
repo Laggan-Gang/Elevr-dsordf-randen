@@ -167,9 +167,11 @@ module.exports = {
     .setColor("#0099ff")
     .setTitle("Gameroos");
 
-  games.forEach((game) => {
-    exampleEmbed.addField("", `${game}`, false);
-  });
+  //games.forEach((game) => {
+  //  exampleEmbed.addField("", `${game}`, false);
+  //});
+  exampleEmbed.addField("These are games", `${games.join("\n")}`, false);
+ 
 
     //const embed = new MessageEmbed()
     //  .setTitle("Gameroos");
