@@ -159,10 +159,6 @@ module.exports = {
     const games = [...games2];
     
     
-    const titleField = {
-    name: "Gameroos",
-    value: "I have consulted the archives and this is what I got",
-  };
   const exampleEmbed = new MessageEmbed()
     .setColor("#0099ff")
     .setTitle("Gameroos");
@@ -170,7 +166,8 @@ module.exports = {
   //games.forEach((game) => {
   //  exampleEmbed.addField("", `${game}`, false);
   //});
-  exampleEmbed.addField("These are games", `${games.join("\n")}`, true);
+    const sortGameList = games.map((g, index) => ({`${index + 1}. ${g}`})
+  exampleEmbed.addField("I have consulted the archives and this is what I got:", `${sortGameList.join("\n")}`, true);
  
 
     //const embed = new MessageEmbed()
