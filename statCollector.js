@@ -154,13 +154,13 @@ module.exports = {
   },
 
   listGames: async (meddelande) => {
-    const games = await getGames();
-
+    const games2 = await getGames();
     console.log([...games]);
+    const games = [...games2];
 
     const embed = new MessageEmbed()
-      .setTitle("Gameroos")
-      .addField("I have consulted the archives and this is what I got");
+      .setTitle("Gameroos");
+      /////.addField("I have consulted the archives and this is what I got");
 
     const gameFields = games.map((g, index) => ({
       name: "",
