@@ -157,19 +157,34 @@ module.exports = {
     const games2 = await getGames();
     console.log([...games2]);
     const games = [...games2];
+    
+    
+    const titleField = {
+    name: "Gameroos",
+    value: "I have consulted the archives and this is what I got",
+  };
+  const exampleEmbed = new MessageEmbed()
+    .setColor("#0099ff")
+    .setTitle("Gameroos");
 
-    const embed = new MessageEmbed()
-      .setTitle("Gameroos");
-      /////.addField("I have consulted the archives and this is what I got");
+  games.forEach((game) => {
+    exampleEmbed.addField("This is a game: ", `${game}`, true);
+  });
 
-    const gameFields = games.map((g, index) => ({
-      name: "",
-      field: `${index + 1}. ${g}`,
-    }));
+    //const embed = new MessageEmbed()
+    //  .setTitle("Gameroos");
+    //  /////.addField("I have consulted the archives and this is what I got");
 
-    await meddelande.channel.send({
-      embeds: [embed.setTimestamp().addFields(gameFields)],
-    });
+    //const gameFields = games.map((g, index) => ({
+    //  name: "",
+    //  field: `${index + 1}. ${g}`,
+    //}));
+
+    await meddelande.channel.send({embeds: [exampleEmbed]});
+    
+    //await meddelande.channel.send({
+    //  embeds: [embed.setTimestamp().addFields(gameFields)],
+    //});
   },
 };
 
