@@ -159,8 +159,8 @@ module.exports = {
     console.log([...games]);
 
     const embed = new MessageEmbed()
-      .setTitle("Gameroos");
-      /////.addField(`I have consulted the archives and this is what I got`);
+      .setTitle("Gameroos"),
+      .addField(`I have consulted the archives and this is what I got`);
 
     const gameFields = games.map((g, index) => ({
       name: "",
