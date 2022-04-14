@@ -80,18 +80,21 @@ client.on("messageCreate", async (meddelande) => {
       case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
+
       case meddelande.type === "REPLY":
         let brottet = await meddelande.channel.messages.fetch(
           meddelande.reference.messageId
         );
         await elevRådsOrdförande(meddelande, brottet);
         break;
+
       case meddelande.content.toLowerCase().startsWith(commands.role.command) ||
         meddelande.content
           .toLowerCase()
           .startsWith(commands.role.alternativeCommand):
         await roleAssign(meddelande);
         break;
+
       case meddelande.content.toLocaleLowerCase() === commands.pang.command:
         if (meddelande.member.voice.channel !== null) {
           await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(

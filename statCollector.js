@@ -156,13 +156,15 @@ module.exports = {
   listGames: async (meddelande) => {
     const games = await getGames();
 
+    console.log([...games]);
+    
     const embed = new MessageEmbed()
       .setTitle("Gameroos")
       .addField(`I have consulted the archives and this is what I got`);
 
     const gameFields = games.map((g, index) => ({
       name: "",
-      field: `${index}. ${g}`,
+      field: `${index + 1}. ${g}`,
     }));
 
     await meddelande.channel.send({
