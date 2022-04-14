@@ -137,7 +137,7 @@ module.exports = {
       getMaxRandomishNumber(matOchDryck.length, genereraRandom)
     );
 
-    const embed = MessageEmbed()
+    const embed = new MessageEmbed()
       .setTitle(`Smorgesbord for biggest ${type} peoples`)
       .addField(`Top ${numberOfPeoples}`, listOfGods);
 

@@ -3,10 +3,13 @@ const { commands } = require("./commands");
 
 module.exports = {
   help: async (meddelande) => {
-    const fields = commands.map((c) => ({
-      name: `${c.command} ${c.alternativeCommand}`,
-      value: c.helpText,
-    }));
+    const fields = Object.keys(commands).map((k) => {
+      
+    const command = commands[k];
+    return {
+      name: `${command.command} ${command.alternativeCommand}`,
+      value: command.helpText,
+    });
 
     const embed = new MessageEmbed()
       .setDescription("This is what I can do !")
