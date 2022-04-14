@@ -70,6 +70,7 @@ client.on("messageCreate", async (meddelande) => {
         break;
 
       case meddelande.content.startsWith(commands.smorgesbord.command):
+        console.log("Preparing to give games!");
         await bigData.smorgesbord(meddelande, client);
         break;
 
