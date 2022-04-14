@@ -166,7 +166,7 @@ module.exports = {
   //games.forEach((game) => {
   //  exampleEmbed.addField("", `${game}`, false);
   //});
-    const sortGameList = games.map((g, index) => ({`${index + 1}. ${g}`}));
+    const sortGameList = games.map((g, index) => (`${index + 1}. ${g}));
   exampleEmbed.addField("I have consulted the archives and this is what I got:", `${sortGameList.join("\n")}`, true);
   
 
