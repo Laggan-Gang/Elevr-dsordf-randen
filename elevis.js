@@ -74,7 +74,7 @@ client.on("messageCreate", async (meddelande) => {
         break;
 
       case meddelande.content.toLocaleLowerCase() === commands.help.command:
-        await help();
+        await help(meddelande);
         break;
 
       case meddelande.content.startsWith("<@"):
