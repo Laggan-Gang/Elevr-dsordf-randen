@@ -77,12 +77,12 @@ module.exports = {
   },
 
   gameWiener: async (meddelande) => {
-    const arguments = meddelande.content.replace("!победител", "").split(" ");
+    const arguments = meddelande.content.split(" ");
 
-    const playerId = arguments[0];
-    const game = arguments[1] || "Dota";
+    const playerId = arguments[1];
+    const game = arguments[2] || "Dota";
 
-    const { totalGames, vinstProcent, vinst } = await calculateGameWiener(
+    const { total, percent, vinst } = await calculateGameWiener(
       playerId.trim(),
       game
     );
@@ -91,7 +91,7 @@ module.exports = {
 
     if (isDummaTik) {
       await meddelande.reply(
-        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${vinstProcent}%]\` is kinda low over \`${totalGames}\` !.`
+        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${percent}%]\` is kinda low over \`${total}\` !.`
       );
     } else {
       await meddelande.reply(
@@ -107,14 +107,9 @@ module.exports = {
     const game = smorgesbordMessageParams[2] || "Dota";
     const numberOfPeoples = smorgesbordMessageParams[3] || 10;
 
-    const yaposId = "412260353699872768";
     const members = await meddelande.guild.members.fetch();
 
-    const yaposMembers = members.filter((m) =>
-      m.roles.cache.some((r) => r.id === yaposId)
-    );
-
-    const yapos = yaposMembers.map((m) => m.user);
+    const yapos = members.map((m) => m.user);
 
     const smorgesbordResponses = await Promise.all(
       yapos.map(async (m) => {
@@ -123,12 +118,18 @@ module.exports = {
       })
     );
 
-    const listOfGods = getListOfGodsByType(
+    const listOfGods = sortListOfGods(
       smorgesbordType,
-      smorgesbordResponses
-        .filter((m) => !isNaN(m.vinstProcent))
-        .slice(0, numberOfPeoples)
-    );
+      smorgesbordResponses.filter((m) => !isNaN(m.percent))
+    )
+      .slice(0, numberOfPeoples)
+      .map(
+        (m, index) =>
+          `${index + 1}. ${m.member.username} - ${m[smorgesbordType]} ${
+            smorgesbordType === "percent" ? "%" : ""
+          }`
+      )
+      .join("\n");
 
     const seedOfToday = new Date().toDateString();
     const genereraRandom = createSeededGenerator(seedOfToday);
@@ -138,7 +139,7 @@ module.exports = {
     );
 
     const embed = new MessageEmbed()
-      .setTitle(`Smorgesbord for biggest ${type} peoples`)
+      .setTitle(`Smorgesbord for biggest ${smorgesbordType} peoples`)
       .addField(`Top ${numberOfPeoples}`, listOfGods);
 
     await meddelande.channel.send({
@@ -157,36 +158,22 @@ module.exports = {
     const games2 = await getGames();
     console.log([...games2]);
     const games = [...games2];
-    
-    
-  const exampleEmbed = new MessageEmbed()
-    .setColor("#0099ff")
-    .setTitle("Gameroos");
 
-  //games.forEach((game) => {
-  //  exampleEmbed.addField("", `${game}`, false);
-  //});
-    //const sortGameList = games.map((g, index) => (`${index + 1}. ${g}));
-    const sortGameList = games.map((g, index) => "**" + (index + 1) + ".** " + g);
-  exampleEmbed.addField("I have consulted the archives and this is what I got:", `${sortGameList.join("\n")}`, true);
-  
+    const exampleEmbed = new MessageEmbed()
+      .setColor("#0099ff")
+      .setTitle("Gameroos")
+      .setTimestamp();
 
- 
+    const sortGameList = games.map(
+      (g, index) => "**" + (index + 1) + ".** " + g
+    );
+    exampleEmbed.addField(
+      "I have consulted the archives and this is what I got:",
+      `${sortGameList.join("\n")}`,
+      true
+    );
 
-    //const embed = new MessageEmbed()
-    //  .setTitle("Gameroos");
-    //  /////.addField("I have consulted the archives and this is what I got");
-
-    //const gameFields = games.map((g, index) => ({
-    //  name: "",
-    //  field: `${index + 1}. ${g}`,
-    //}));
-
-    await meddelande.channel.send({embeds: [exampleEmbed]});
-    
-    //await meddelande.channel.send({
-    //  embeds: [embed.setTimestamp().addFields(gameFields)],
-    //});
+    await meddelande.channel.send({ embeds: [exampleEmbed] });
   },
 };
 
@@ -194,39 +181,24 @@ function getMaxRandomishNumber(max, genereraRandom) {
   return Math.floor(genereraRandom() * (max + 1));
 }
 
-function getListOfGodsByType(type, data) {
+function sortListOfGods(type, data) {
   switch (type) {
     case "percent": {
-      const topvinstPercent = data.sort(
-        (m1, m2) => m2.vinstProcent - m1.vinstProcent
-      );
+      const topvinstPercent = data.sort((m1, m2) => m2.percent - m1.percent);
 
-      return topvinstPercent
-        .map(
-          (m, index) =>
-            `${index + 1}. ${m.member.username} - ${m.vinstProcent}% `
-        )
-        .join("\n");
+      return topvinstPercent;
     }
 
     case "total": {
-      const topvinstPercent = data.sort(
-        (m1, m2) => m2.totalGames - m1.totalGames
-      );
+      const total = data.sort((m1, m2) => m2.total - m1.total);
 
-      return topvinstPercent
-        .map(
-          (m, index) => ` ${index + 1}. ${m.member.username} - ${m.totalGames} `
-        )
-        .join("\n");
+      return total;
     }
 
     case "vinst": {
-      const totalGames = data.sort((m1, m2) => m2.vinst - m1.vinst);
+      const totalWins = data.sort((m1, m2) => m2.vinst - m1.vinst);
 
-      return totalGames
-        .map((m, index) => `${index + 1}. ${m.member.username} - ${m.vinst} `)
-        .join("\n");
+      return totalWins;
     }
   }
 }

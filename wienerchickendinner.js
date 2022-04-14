@@ -41,8 +41,8 @@ async function calculateGameWiener(playerId, game) {
   const wins = playerStats.filter((r) => r.win).length;
 
   return {
-    vinstProcent: ((wins / playerStats.length) * 100).toFixed(2),
-    totalGames: playerStats.length,
+    percent: playerStats.length > 0 ? ((wins / playerStats.length) * 100).toFixed(2) : 0,
+    total: playerStats.length,
     vinst: wins,
   };
 }
