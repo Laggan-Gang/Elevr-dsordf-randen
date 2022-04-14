@@ -4,11 +4,11 @@ const { commands } = require("./commands");
 module.exports = {
   help: async (meddelande) => {
     const fields = Object.keys(commands).map((k) => {
-      
-    const command = commands[k];
-    return {
-      name: `${command.command} ${command.alternativeCommand}`,
-      value: command.helpText,
+      const command = commands[k];
+      return {
+        name: `${command.command} ${command.alternativeCommand}`,
+        value: command.helpText,
+      };
     });
 
     const embed = new MessageEmbed()
