@@ -155,7 +155,7 @@ module.exports = {
 
   listGames: async (meddelande) => {
     const games2 = await getGames();
-    console.log([...games]);
+    console.log([...games2]);
     const games = [...games2];
 
     const embed = new MessageEmbed()
