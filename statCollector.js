@@ -125,9 +125,9 @@ module.exports = {
 
     const listOfGods = getListOfGodsByType(
       smorgesbordType,
-      smorgesbordResponses.filter(
-        (m) => !isNaN(m.vinstProcent).slice(0, numberOfPeoples)
-      )
+      smorgesbordResponses
+        .filter((m) => !isNaN(m.vinstProcent))
+        .slice(0, numberOfPeoples)
     );
 
     const seedOfToday = new Date().toDateString();
