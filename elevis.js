@@ -61,7 +61,8 @@ client.on("messageCreate", async (meddelande) => {
         await bigData.statCollector(meddelande);
         break;
 
-      case meddelande.content.toLowerCase() === commands.listGames.command:
+      case meddelande.content === commands.listGames.command:
+        console.log("Preparing to give games!");
         await bigData.listGames(meddelande);
         break;
 
@@ -70,7 +71,6 @@ client.on("messageCreate", async (meddelande) => {
         break;
 
       case meddelande.content.startsWith(commands.smorgesbord.command):
-        console.log("Preparing to give games!");
         await bigData.smorgesbord(meddelande, client);
         break;
 
