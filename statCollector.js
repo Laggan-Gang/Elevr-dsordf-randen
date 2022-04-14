@@ -87,7 +87,7 @@ module.exports = {
       game
     );
 
-    const isDummaTik = vinstProcent < 50;
+    const isDummaTik = percent < 50;
 
     if (isDummaTik) {
       await meddelande.reply(
@@ -95,7 +95,7 @@ module.exports = {
       );
     } else {
       await meddelande.reply(
-        `${playerId} Glorious winner of \`${vinst}\ [${vinstProcent}%]\` of your \`${totalGames}\`!.`
+        `${playerId} Glorious winner of \`${vinst}\ [${percent}%]\` of your \`${totalGames}\`!.`
       );
     }
   },

@@ -24,8 +24,14 @@ async function getGames() {
 async function getPlayerStats(playerId, gameId) {
   const response = await getAxiosInternal();
   return response.data.filter(
-    (r) => r.game === gameId && r.username === playerId
+    // strip naughty nicknames
+    (r) =>
+      r.game === gameId &&
+      sanitizeDiscordUserId(r.username) === sanitizeDiscordUserId(playerId)
   );
+}
+function sanitizeDiscordUserId(userId) {
+  return userId.replace("!", "");
 }
 
 async function calculateGameWiener(playerId, game) {
@@ -41,7 +47,10 @@ async function calculateGameWiener(playerId, game) {
   const wins = playerStats.filter((r) => r.win).length;
 
   return {
-    percent: playerStats.length > 0 ? ((wins / playerStats.length) * 100).toFixed(2) : 0,
+    percent:
+      playerStats.length > 0
+        ? ((wins / playerStats.length) * 100).toFixed(2)
+        : 0,
     total: playerStats.length,
     vinst: wins,
   };
