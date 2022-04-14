@@ -103,7 +103,7 @@ module.exports = {
   smorgesbord: async (meddelande) => {
     const smorgesbordMessageParams = meddelande.content.split(" ");
 
-    const smorgesbordType = smorgesbordMessageParams[1];
+    const smorgesbordType = smorgesbordMessageParams[1] || "percent";
     const game = smorgesbordMessageParams[2] || "Dota";
     const numberOfPeoples = smorgesbordMessageParams[3] || 10;
 
@@ -157,7 +157,7 @@ module.exports = {
     const games = await getGames();
 
     console.log([...games]);
-    
+
     const embed = new MessageEmbed()
       .setTitle("Gameroos")
       .addField(`I have consulted the archives and this is what I got`);
