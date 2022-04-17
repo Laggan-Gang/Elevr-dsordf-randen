@@ -129,7 +129,7 @@ module.exports = {
           id: username,
           vinst: Number(curr.win),
           losses: Number(!curr.win),
-          percent: 0,
+          percent: 1000,
           total: 1,
           mmr: curr.win ? 25 : -25,
         });
