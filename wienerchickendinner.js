@@ -60,8 +60,13 @@ async function getAllStatsFor(gameFilter, idFilterArray) {
   return res.data;
 }
 
+function sanitizeDiscordUserId(userId) {
+  if (!userId?.startsWith("<@")) return userId;
+  return userId.replace(/<@!?/, "").replace(">", "");
+}
 module.exports = {
   calculateGameWiener,
   getGames,
   getAllStatsFor,
+  sanitizeDiscordUserId,
 };

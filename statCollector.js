@@ -4,6 +4,7 @@ const {
   calculateGameWiener,
   getGames,
   getAllStatsFor,
+  sanitizeDiscordUserId,
 } = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
 const { matOchDryck } = require("./matOchDryck.js");
@@ -83,9 +84,9 @@ module.exports = {
   gameWiener: async (meddelande) => {
     const arguments = meddelande.content.split(" ");
 
-    let playerId = arguments[1];
+    let playerId = sanitizeDiscordUserId(arguments[1]);
     if (!playerId) {
-      playerId = `${meddelande.author.id}`;
+      playerId = meddelande.author.id;
     }
     const game = arguments[2] || "Dota 2";
 
@@ -283,7 +284,7 @@ function kapitalisera(string) {
 
 async function kapitalArray(array) {
   const kapitaliserad = array.map((namn) => {
-    return kapitalisera(namn);
+    return kapitalisera(sanitizeDiscordUserId(namn));
   });
   return kapitaliserad;
 }
