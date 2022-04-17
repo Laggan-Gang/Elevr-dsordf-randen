@@ -33,12 +33,14 @@ const commands = {
   },
   smorgesbord: {
     command: "!smorgesbord",
+    alternativeCommand: "!rank",
     helpText: "Get a cool smorgesbord.",
     exampleUsage:
       "!smorgesbord [ vinst/percent/total ] [ gameId ?] [ number of peoples ?]",
   },
   help: {
     command: "!helpame",
+    alternativeCommand: "!help",
     helpText: "Elvis flexes his abilities in front of everyone.",
     exampleUsage: "!helpame",
   },

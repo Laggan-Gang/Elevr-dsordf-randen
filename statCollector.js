@@ -18,12 +18,12 @@ module.exports = {
     //split at comma SPACE
     const cleanMessage = meddelande.content.slice(6);
     const arr = cleanMessage.split(", ");
-    const game = kapitalisera(arr[0]);
+    const game = arr[0];
     const matchId = arr[1];
 
     if (game === "") {
       await meddelande.reply(
-        "Please specify what game you're looking to LaggStat by typing `!stat *example game*`. If you want to add an optional matchId, you can type `!stat *example*, *matchId*`"
+        "Please specify what game you're looking to LaggStat by typing `!stat *example game*`. If you want to add an optional matchId, you can type `!stat *example*, *matchId*`. See a list of existing games with `!giveGames`"
       );
       return;
     } else if (game.toLowerCase().includes("example")) {
@@ -81,39 +81,36 @@ module.exports = {
     return;
   },
 
-  gameWiener: async (meddelande) => {
-    const arguments = meddelande.content.split(" ");
+  gameWiener: async (meddelande, arguments) => {
+    const playerId =
+      sanitizeDiscordUserId(arguments[0]) || meddelande.author.id;
 
-    let playerId = sanitizeDiscordUserId(arguments[1]);
-    if (!playerId) {
-      playerId = meddelande.author.id;
-    }
-    const game = arguments[2] || "Dota 2";
+    const game = arguments[1] || "dota 2";
 
-    const { total, percent, vinst } = await calculateGameWiener(
-      playerId.trim(),
-      game
-    );
+    const { total, percent, vinst } = await calculateGameWiener(playerId, game);
 
     const isDummaTik = percent < 50;
 
     if (isDummaTik) {
       await meddelande.reply(
-        `${playerId} You should win more games before you speak to me. But yeah \`${vinst} [${percent}%]\` is kinda low over \`${total}\` !.`
+        `<@${playerId}>, you should win more ${game} games before you speak to me. But yeah \`${vinst} [${percent}%]\` is kinda low over \`${total}\` games!.`
       );
     } else {
       await meddelande.reply(
-        `${playerId} Glorious winner of \`${vinst}\ [${percent}%]\` of your \`${total}\`!.`
+        `<@${playerId}>, glorious winner of \`${vinst}\ [${percent}%]\` of your \`${total}\` ${game} games!.`
       );
     }
   },
 
-  smorgesbord: async (meddelande) => {
-    const smorgesbordMessageParams = meddelande.content.split(" ");
+  smorgesbord: async (meddelande, args) => {
+    if (!validateSmorgesbordArgs(args))
+      return meddelande.reply(
+        "incorrect usage, noob. Like this: `!smorgesbord mmr, dota 2, 10` for a list of 10 gamers sorted by inhouse-mmr in dota 2"
+      );
 
-    const smorgesbordType = smorgesbordMessageParams[1] || "percent";
-    const game = smorgesbordMessageParams[2] || "Dota 2";
-    const numberOfPeoples = smorgesbordMessageParams[3] || 10;
+    const smorgesbordType = args[0] || "percent";
+    const game = args[1] || "dota 2";
+    const numberOfPeoples = args[2] || 10;
 
     const members = await meddelande.guild.members.fetch();
     const results = await getAllStatsFor(game);
@@ -130,15 +127,19 @@ module.exports = {
       if (user == undefined) {
         prev.push({
           id: username,
-          vinst: Number(!!curr.win),
+          vinst: Number(curr.win),
           losses: Number(!curr.win),
           percent: 0,
           total: 1,
+          mmr: curr.win ? 25 : -25,
         });
       } else {
         user.vinst += Number(!!curr.win);
         user.losses += Number(!curr.win);
         user.total += 1;
+        user.mmr += curr.win ? 25 : -25;
+        if (user.mmr < 0) user.mmr = 0;
+
         user.percent = ((user.vinst / user.total) * 100).toFixed(2);
       }
       return prev;
@@ -149,7 +150,7 @@ module.exports = {
       .map(
         (m, index) =>
           `${index + 1}. ${m.id} - ${m[smorgesbordType]} ${
-            smorgesbordType === "percent" ? "%" : ""
+            smorgesbordType === "percent" ? `% (${m.total} games)` : ""
           }`
       )
       .join("\n");
@@ -162,7 +163,7 @@ module.exports = {
     );
 
     const embed = new MessageEmbed()
-      .setTitle(`Smorgesbord for biggest ${smorgesbordType} peoples`)
+      .setTitle(`Smorgesbord for ${game}'s biggest ${smorgesbordType} peoples`)
       .addField(`Top ${numberOfPeoples}`, listOfGods);
 
     await meddelande.channel.send({
@@ -221,6 +222,11 @@ function sortListOfGods(type, data) {
       const totalWins = data.sort((m1, m2) => m2.vinst - m1.vinst);
 
       return totalWins;
+    }
+
+    case "mmr": {
+      console.log(data);
+      return data.sort((m1, m2) => m2.mmr - m1.mmr);
     }
   }
 }
@@ -419,6 +425,11 @@ async function openingQuery(tråden, charadeInstigator, game) {
     `Happy to help you report the results from the ${game} match! What player/s (if multiple, separated by spaces) were on the winning team?`
   );
   return await dataCollection(tråden, charadeInstigator, latestMessage);
+}
+
+function validateSmorgesbordArgs(args) {
+  console.log(args[0]);
+  return ["percent", "vinst", "total", "mmr", "", undefined].includes(args[0]);
 }
 
 async function followUpQuestion(tråden, teamsArray, charadeInstigator) {
