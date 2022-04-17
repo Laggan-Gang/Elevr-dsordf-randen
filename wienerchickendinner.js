@@ -2,7 +2,7 @@ const { laggStatsBaseUrl } = require("./config.json");
 const axios = require("axios");
 //@ts-check
 
-async function getAxiosInternal() {
+async function getAllResults() {
   const request = {
     baseURL: laggStatsBaseUrl,
     url: "result/all",
@@ -16,34 +16,13 @@ async function getAxiosInternal() {
 }
 
 async function getGames() {
-  const response = await getAxiosInternal();
+  const response = await getAllResults();
 
   return new Set(response.data.map((bigData) => bigData.game));
 }
 
-async function getPlayerStats(playerId, gameId) {
-  const response = await getAxiosInternal();
-  return response.data.filter(
-    // strip naughty nicknames
-    (r) =>
-      r.game === gameId &&
-      sanitizeDiscordUserId(r.username) === sanitizeDiscordUserId(playerId)
-  );
-}
-function sanitizeDiscordUserId(userId) {
-  return userId.replace("!", "");
-}
-
 async function calculateGameWiener(playerId, game) {
-  let playerStats = [];
-  if (game === "Dota" || game === "Dota 2") {
-    const dStats = await getPlayerStats(playerId, "Dota");
-    const d2Stats = await getPlayerStats(playerId, "Dota 2");
-    playerStats = dStats.concat(d2Stats);
-  } else {
-    await getPlayerStats(playerId, game);
-  }
-
+  const playerStats = await getAllStatsFor(game, [playerId]);
   const wins = playerStats.filter((r) => r.win).length;
 
   return {
@@ -56,7 +35,33 @@ async function calculateGameWiener(playerId, game) {
   };
 }
 
+async function getAllStatsFor(gameFilter, idFilterArray) {
+  const args = [];
+  if (gameFilter) {
+    args.push(["game", "==", gameFilter]);
+  }
+  if (idFilterArray) {
+    args.push(["username", "in", idFilterArray]);
+  }
+
+  const res = await axios({
+    baseURL: laggStatsBaseUrl,
+    url: "/result/query",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    responseType: "json",
+    data: {
+      args: args,
+    },
+  });
+
+  return res.data;
+}
+
 module.exports = {
   calculateGameWiener,
   getGames,
+  getAllStatsFor,
 };

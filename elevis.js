@@ -35,6 +35,7 @@ const {
 } = require("@discordjs/voice");
 const { commands } = require("./commands");
 const { help } = require("./help");
+const { addAliases } = require("./statRocket");
 
 let varningar = 0;
 
@@ -78,6 +79,10 @@ client.on("messageCreate", async (meddelande) => {
         await help(meddelande);
         break;
 
+      case meddelande.content.startsWith(commands.alias.command):
+        await alias(meddelande);
+        break;
+
       case meddelande.content.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
@@ -109,12 +114,25 @@ client.on("messageCreate", async (meddelande) => {
   }
 });
 
+async function alias(meddelande) {
+  const id = meddelande.author.id;
+  const allExceptFirst = meddelande.content.split(" ").slice(1);
+  const res = await addAliases(id, allExceptFirst);
+  if (res.status == "200") {
+    meddelande.react("👍");
+  } else {
+    meddelande.react("👎");
+  }
+  return;
+}
+
 async function motiveradVarning(meddelande) {
   const arr = meddelande.content.split(" ");
   const warned = arr[0];
   const command = arr[1];
+
   const orsak = arr.slice(2).join(" ");
-  if (!command.endsWith("arning")) {
+  if (!command?.endsWith("arning")) {
     return;
   }
   switch (command) {

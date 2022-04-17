@@ -1,6 +1,10 @@
 const { MessageEmbed } = require("discord.js");
 const statRocket = require("./statRocket.js");
-const { calculateGameWiener, getGames } = require("./wienerchickendinner.js");
+const {
+  calculateGameWiener,
+  getGames,
+  getAllStatsFor,
+} = require("./wienerchickendinner.js");
 const { dublettKollaren } = require("./dublettKollare.js");
 const { matOchDryck } = require("./matOchDryck.js");
 const { createSeededGenerator } = require("./podnaem.js");
@@ -8,14 +12,14 @@ const { createSeededGenerator } = require("./podnaem.js");
 module.exports = {
   statCollector: async (meddelande) => {
     const charadeInstigator = meddelande.author.id;
-    //"!stat dota 2, D21"
+    //"!stat Dota 2, D21"
     //remove 6 first characters
     //split at comma SPACE
     const cleanMessage = meddelande.content.slice(6);
     const arr = cleanMessage.split(", ");
     const game = kapitalisera(arr[0]);
     const matchId = arr[1];
-    console.log(game);
+
     if (game === "") {
       await meddelande.reply(
         "Please specify what game you're looking to LaggStat by typing `!stat *example game*`. If you want to add an optional matchId, you can type `!stat *example*, *matchId*`"
@@ -79,8 +83,11 @@ module.exports = {
   gameWiener: async (meddelande) => {
     const arguments = meddelande.content.split(" ");
 
-    const playerId = arguments[1];
-    const game = arguments[2] || "Dota";
+    let playerId = arguments[1];
+    if (!playerId) {
+      playerId = `${meddelande.author.id}`;
+    }
+    const game = arguments[2] || "Dota 2";
 
     const { total, percent, vinst } = await calculateGameWiener(
       playerId.trim(),
@@ -95,7 +102,7 @@ module.exports = {
       );
     } else {
       await meddelande.reply(
-        `${playerId} Glorious winner of \`${vinst}\ [${percent}%]\` of your \`${totalGames}\`!.`
+        `${playerId} Glorious winner of \`${vinst}\ [${percent}%]\` of your \`${total}\`!.`
       );
     }
   },
@@ -104,28 +111,43 @@ module.exports = {
     const smorgesbordMessageParams = meddelande.content.split(" ");
 
     const smorgesbordType = smorgesbordMessageParams[1] || "percent";
-    const game = smorgesbordMessageParams[2] || "Dota";
+    const game = smorgesbordMessageParams[2] || "Dota 2";
     const numberOfPeoples = smorgesbordMessageParams[3] || 10;
 
     const members = await meddelande.guild.members.fetch();
-
+    const results = await getAllStatsFor(game);
+    if (results?.length == 0) {
+      return meddelande.reply("No data found");
+    }
     const yapos = members.map((m) => m.user);
 
-    const smorgesbordResponses = await Promise.all(
-      yapos.map(async (m) => {
-        const dotaStats = await calculateGameWiener(`<@!${m.id}>`, game);
-        return { member: m, ...dotaStats };
-      })
-    );
+    const aggregated = results.reduce((prev, curr) => {
+      const username = yapos.find((x) =>
+        curr.username.includes(x.id)
+      )?.username;
+      const user = prev.find((x) => x.id == username);
+      if (user == undefined) {
+        prev.push({
+          id: username,
+          vinst: Number(!!curr.win),
+          losses: Number(!curr.win),
+          percent: 0,
+          total: 1,
+        });
+      } else {
+        user.vinst += Number(!!curr.win);
+        user.losses += Number(!curr.win);
+        user.total += 1;
+        user.percent = ((user.vinst / user.total) * 100).toFixed(2);
+      }
+      return prev;
+    }, []);
 
-    const listOfGods = sortListOfGods(
-      smorgesbordType,
-      smorgesbordResponses.filter((m) => !isNaN(m.percent))
-    )
+    const listOfGods = sortListOfGods(smorgesbordType, aggregated)
       .slice(0, numberOfPeoples)
       .map(
         (m, index) =>
-          `${index + 1}. ${m.member.username} - ${m[smorgesbordType]} ${
+          `${index + 1}. ${m.id} - ${m[smorgesbordType]} ${
             smorgesbordType === "percent" ? "%" : ""
           }`
       )
@@ -156,7 +178,6 @@ module.exports = {
 
   listGames: async (meddelande) => {
     const games2 = await getGames();
-    console.log([...games2]);
     const games = [...games2];
 
     const exampleEmbed = new MessageEmbed()
