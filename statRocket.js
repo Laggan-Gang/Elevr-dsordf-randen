@@ -32,27 +32,19 @@ module.exports = {
       console.error(error);
     }
   },
+  addAliases: async (id, aliasArray) => {
+    return await axios({
+      baseURL: laggStatsBaseUrl,
+      url: "/alias",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: {
+        id: id,
+        aliases: aliasArray,
+      },
+      responseType: "json",
+    });
+  },
 };
-
-async function idRocket() {
-  //This is just for example if I need it later
-  //const arr = meddelande.content.toLocaleLowerCase().split(' ');
-  //const fejkLista = arr.slice(1);
-  let id = "207840759087497217";
-
-  let aliasesData = {
-    aliases: ["hugo", "snygghugo", "goblin", "goblinchair bladeborne"],
-    id: id,
-  };
-
-  const request = {
-    baseURL: laggStatsBaseUrl,
-    url: "/alias",
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    data: aliasesData,
-    responseType: "json",
-  };
-}

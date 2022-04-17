@@ -35,6 +35,7 @@ const {
 } = require("@discordjs/voice");
 const { commands } = require("./commands");
 const { help } = require("./help");
+const { addAliases } = require("./statRocket");
 
 let varningar = 0;
 
@@ -55,30 +56,40 @@ function löftesKollaren(player) {
 client.on("messageCreate", async (meddelande) => {
   //=> är en funktion
 
+  const msg = meddelande.content;
+  const args = meddelande.content
+    .replace(/!.+?(\s|$)/, "")
+    .split(meddelande.content.includes(",") ? "," : " ")
+    .map((x) => x.trim().toLowerCase());
+
   if (!meddelande.author.bot) {
     switch (true) {
-      case meddelande.content.startsWith(commands.stat.command):
+      case msg.startsWith(commands.stat.command):
         await bigData.statCollector(meddelande);
         break;
 
-      case meddelande.content === commands.listGames.command:
-        console.log("Preparing to give games!");
+      case msg === commands.listGames.command:
         await bigData.listGames(meddelande);
         break;
 
-      case meddelande.content.startsWith(commands.pobeditel.command):
-        await bigData.gameWiener(meddelande);
+      case msg.startsWith(commands.pobeditel.command):
+        await bigData.gameWiener(meddelande, args);
         break;
 
-      case meddelande.content.startsWith(commands.smorgesbord.command):
-        await bigData.smorgesbord(meddelande, client);
+      case msg.startsWith(commands.smorgesbord.command) ||
+        msg.startsWith(commands.smorgesbord.alternativeCommand):
+        await bigData.smorgesbord(meddelande, args);
         break;
 
-      case meddelande.content.toLocaleLowerCase() === commands.help.command:
+      case msg.toLocaleLowerCase() === commands.help.command:
         await help(meddelande);
         break;
 
-      case meddelande.content.startsWith("<@"):
+      case msg.startsWith(commands.alias.command):
+        await alias(meddelande);
+        break;
+
+      case msg.startsWith("<@"):
         await motiveradVarning(meddelande);
         break;
 
@@ -89,14 +100,12 @@ client.on("messageCreate", async (meddelande) => {
         await elevRådsOrdförande(meddelande, brottet);
         break;
 
-      case meddelande.content.toLowerCase().startsWith(commands.role.command) ||
-        meddelande.content
-          .toLowerCase()
-          .startsWith(commands.role.alternativeCommand):
+      case msg.toLowerCase().startsWith(commands.role.command) ||
+        msg.toLowerCase().startsWith(commands.role.alternativeCommand):
         await roleAssign(meddelande);
         break;
 
-      case meddelande.content.toLocaleLowerCase() === commands.pang.command:
+      case msg.toLocaleLowerCase() === commands.pang.command:
         if (meddelande.member.voice.channel !== null) {
           await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
             meddelande
@@ -109,12 +118,25 @@ client.on("messageCreate", async (meddelande) => {
   }
 });
 
+async function alias(meddelande) {
+  const id = meddelande.author.id;
+  const allExceptFirst = meddelande.content.split(" ").slice(1);
+  const res = await addAliases(id, allExceptFirst);
+  if (res.status == "200") {
+    meddelande.react("👍");
+  } else {
+    meddelande.react("👎");
+  }
+  return;
+}
+
 async function motiveradVarning(meddelande) {
   const arr = meddelande.content.split(" ");
   const warned = arr[0];
   const command = arr[1];
+
   const orsak = arr.slice(2).join(" ");
-  if (!command.endsWith("arning")) {
+  if (!command?.endsWith("arning")) {
     return;
   }
   switch (command) {
