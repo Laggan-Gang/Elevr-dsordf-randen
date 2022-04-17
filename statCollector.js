@@ -129,9 +129,9 @@ module.exports = {
           id: username,
           vinst: Number(curr.win),
           losses: Number(!curr.win),
-          percent: 1000,
+          percent: 0,
           total: 1,
-          mmr: curr.win ? 25 : -25,
+          mmr: 1000 + (curr.win ? 25 : -25),
         });
       } else {
         user.vinst += Number(!!curr.win);
