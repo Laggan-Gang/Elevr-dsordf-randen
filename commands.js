@@ -1,6 +1,13 @@
 //@ts-check
 
 const commands = {
+  sussy: {
+    command: "!sus",
+    helpText:
+      "Hold on a sec. Some of these bakas seem mighty sussy to me :face_with_raised_eyebrow:",
+    example:
+      "!sus - person who requests this display of arnament needs to be in a voice channel",
+  },
   pang: {
     command: "pang!",
     helpText:

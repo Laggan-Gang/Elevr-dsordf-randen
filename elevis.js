@@ -105,6 +105,16 @@ client.on("messageCreate", async (meddelande) => {
         await roleAssign(meddelande);
         break;
 
+      case msg.toLocaleLowerCase() === commands.sussy.command:
+        if (meddelande.member.voice.channel !== null) {
+          await sus(
+            meddelande
+          );
+        } else {
+          meddelande.reply("?");
+        }
+        break;
+
       case msg.toLocaleLowerCase() === commands.pang.command:
         if (meddelande.member.voice.channel !== null) {
           await clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
@@ -165,6 +175,32 @@ async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
   const player = createAudioPlayer();
   const resource = createAudioResource(
     "clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav"
+  );
+  const connection = joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: channel.guild.voiceAdapterCreator,
+  });
+  const subscription = connection.subscribe(player);
+  player.play(resource);
+  await löftesKollaren(player);
+  if (subscription) {
+    subscription.unsubscribe();
+    connection.destroy();
+    player.stop();
+  } else {
+    meddelande.reply("?");
+  }
+}
+// Haha I just stole the code from above, what are you gonna do??
+// One could easily inte göra det här hemskt men vi måste ju follow the laggan spirit you know!
+async function sus(
+  meddelande
+) {
+  let channel = meddelande.member.voice.channel;
+  const player = createAudioPlayer();
+  const resource = createAudioResource(
+    "sus.mp3"
   );
   const connection = joinVoiceChannel({
     channelId: channel.id,
