@@ -390,7 +390,9 @@ async function prettyConfirmation(
 ) {
   const winnerField = {
     name: "`🏆These are the winners!🏆`",
-    value: `${teamsArray.join("\n")}`,
+    value: `${teamsArray
+      .map((x) => (isDiscordId(x) ? `<@${x}>` : x))
+      .join("\n")}`,
   };
   const loserArray = GATTAI(teamsArray2, teamsArrayForever);
   const exampleEmbed = new MessageEmbed()
@@ -402,7 +404,11 @@ async function prettyConfirmation(
     .setFooter("Please react to confirm or deny");
 
   loserArray.forEach((loseTeam) => {
-    exampleEmbed.addField("`These also tried`", `${loseTeam.join("\n")}`, true);
+    exampleEmbed.addField(
+      "`These also tried`",
+      `${loseTeam.map((x) => (isDiscordId(x) ? `<@${x}>` : x)).join("\n")}`,
+      true
+    );
   });
   if (matchId !== undefined) {
     exampleEmbed.setTitle(`LaggStats ${matchId}`);
@@ -434,11 +440,15 @@ function validateSmorgesbordArgs(args) {
 
 async function followUpQuestion(tråden, teamsArray, charadeInstigator) {
   const latestMessage = await tråden.send(
-    `Okay! So ${teamsArray.join(
-      " & "
-    )} were on the winning team. Who were on the other team?`
+    `Okay! So ${teamsArray
+      .map((x) => (isDiscordId(x) ? `<@${x}>` : x))
+      .join(" & ")} were on the winning team. Who were on the other team?`
   );
   return await dataCollection(tråden, charadeInstigator, latestMessage);
+}
+
+function isDiscordId(x) {
+  return x.length > 16 && !isNaN(x);
 }
 
 //Thread creation
