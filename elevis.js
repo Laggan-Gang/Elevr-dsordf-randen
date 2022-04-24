@@ -50,7 +50,7 @@ for(h of handlingar) {
 client.on("messageCreate", (meddelande) => {
   let aleaIactaEstIterum = Math.random() * 75;
   console.log(`Tärningen är kastad igen, den blev typ ${Math.floor(aleaIactaEstIterum)}`);
-  handleMessage(aleaIactaEstIterum, handlingar, meddelande, client) || tipsrunda(handlingar, meddelande, aleaIactaEstIterum, client)
+  handleMessage(aleaIactaEstIterum, handlingar, meddelande, client) || (!meddelande.author.bot && tipsrunda(handlingar, meddelande, aleaIactaEstIterum, client))
 });
 
 // Login to Discord with your client's token this should always go last I guess?

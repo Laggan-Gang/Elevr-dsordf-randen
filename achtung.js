@@ -31,7 +31,7 @@ module.exports = [{
     handle: async function motiveradVarning(meddelande) {
         const arr = meddelande.content.split(" ");
         const warned = arr[0];
-        const command = arr[1];
+        const command = arr[1] || "";
         const orsak = arr.slice(2).join(" ");
         if (!command.endsWith("arning")) {
             return;
