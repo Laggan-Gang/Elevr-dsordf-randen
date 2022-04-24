@@ -56,6 +56,11 @@ const commands = {
     helpText: "Associate yourself with another nickname",
     exampleUsage: "!nick bigboy bicboi largeboye",
   },
+  hello: {
+    command: "hello!",
+    helpText: "Being curtious is good, but why waste your voice when someone else can do it?",
+    exampleUsage: "hello!",
+  }
 };
 
 module.exports = {
