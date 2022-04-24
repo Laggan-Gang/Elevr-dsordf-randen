@@ -50,4 +50,5 @@ const makeSoundCommand = (command, soundFile) => ({
 module.exports = [
     makeSoundCommand(commands.pang, "clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav"),
     makeSoundCommand(commands.sussy, "sus.mp3"),
+    makeSoundCommand(commands.hello, "kawaiimcgregoruwu.wav"),
 ]
