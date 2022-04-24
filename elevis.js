@@ -28,13 +28,13 @@ client.once("ready", () => {
   console.log("Elevrådsordföranden is online");
 });
 
-
 const handlingar = [
-  ...require('./startCommands'),
+  ...require('./statCommands'),
   ...require('./achtung'),
   ...require('./roleassign'),
-  require('./pang'),
-]
+  ...require('./pang'),
+  require('./help'),
+];
 
 // to handle multibyte kek properly, I'm sure bulgarian has some multibyte characters in it. Or that the weebs will start using kanji any day now
 // also needs to support UTF smileys as bot commands for obvious reasons
@@ -46,8 +46,9 @@ for(h of handlingar) {
   }
 }
 
+
 client.on("messageCreate", (meddelande) => {
-  let aleaIactaEstIterum = Math.floor(Math.random() * 75);
+  let aleaIactaEstIterum = Math.random() * 75;
   console.log(`Tärningen är kastad igen, den blev typ ${Math.floor(aleaIactaEstIterum)}`);
   handleMessage(aleaIactaEstIterum, handlingar, meddelande, client) || tipsrunda(handlingar, meddelande, aleaIactaEstIterum, client)
 });

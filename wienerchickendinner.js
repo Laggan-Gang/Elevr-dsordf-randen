@@ -2,7 +2,7 @@ const { laggStatsBaseUrl } = require("./config.json");
 const axios = require("axios");
 //@ts-check
 
-async function getPlayerStats(playerId, gameId) {
+async function getAllResults() {
   const request = {
     baseURL: laggStatsBaseUrl,
     url: "result/all",
@@ -12,27 +12,61 @@ async function getPlayerStats(playerId, gameId) {
     },
     responseType: "json",
   };
-  const response = await axios(request);
-
-  return response.data.filter(
-    (r) => r.game === gameId && r.username === playerId
-  );
+  return axios(request);
 }
 
-async function calculateDotaWiener(playerId) {
-  const dStats = await getPlayerStats(playerId, "Dota");
-  const d2Stats = await getPlayerStats(playerId, "Dota 2");
-  const playerStats = dStats.concat(d2Stats);
+async function getGames() {
+  const response = await getAllResults();
 
+  return new Set(response.data.map((bigData) => bigData.game));
+}
+
+async function calculateGameWiener(playerId, game) {
+  const playerStats = await getAllStatsFor(game, [playerId]);
   const wins = playerStats.filter((r) => r.win).length;
 
   return {
-    vinstProcent: ((wins / playerStats.length) * 100).toFixed(2),
-    totalGames: playerStats.length,
+    percent:
+      playerStats.length > 0
+        ? ((wins / playerStats.length) * 100).toFixed(2)
+        : 0,
+    total: playerStats.length,
     vinst: wins,
   };
 }
 
+async function getAllStatsFor(gameFilter, idFilterArray) {
+  const args = [];
+  if (gameFilter) {
+    args.push(["game", "==", gameFilter]);
+  }
+  if (idFilterArray) {
+    args.push(["username", "in", idFilterArray]);
+  }
+
+  const res = await axios({
+    baseURL: laggStatsBaseUrl,
+    url: "/result/query",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    responseType: "json",
+    data: {
+      args: args,
+    },
+  });
+
+  return res.data;
+}
+
+function sanitizeDiscordUserId(userId) {
+  if (!userId?.startsWith("<@")) return userId;
+  return userId.replace(/<@!?/, "").replace(">", "");
+}
 module.exports = {
-  calculateDotaWiener,
+  calculateGameWiener,
+  getGames,
+  getAllStatsFor,
+  sanitizeDiscordUserId,
 };

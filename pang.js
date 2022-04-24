@@ -4,6 +4,7 @@ const {
     joinVoiceChannel,
     AudioPlayerStatus,
 } = require("@discordjs/voice");
+const { commands } = require("./commands");
 
 
 function löftesKollaren(player) {
@@ -15,11 +16,9 @@ function löftesKollaren(player) {
     return ed;
 }
 
-module.exports = {
-    predikat: (meddelande) => meddelande.content.toLocaleLowerCase() === "pang!",
-    handle: async function clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE(
-        meddelande
-    ) {
+const makeSoundCommand = (command, soundFile) => ({
+    predikat: (meddelande) => meddelande.content.toLocaleLowerCase().startsWith(command.command),
+    handle: async function kek(meddelande) {
         if (meddelande.member.voice.channel === null) {
             meddelande.reply("?");
             return
@@ -27,7 +26,7 @@ module.exports = {
         let channel = meddelande.member.voice.channel;
         const player = createAudioPlayer();
         const resource = createAudioResource(
-            "clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav"
+            soundFile,
         );
         const connection = joinVoiceChannel({
             channelId: channel.id,
@@ -44,5 +43,11 @@ module.exports = {
         } else {
             meddelande.reply("?");
         }
-    },
-}
+
+    }
+})
+
+module.exports = [
+    makeSoundCommand(commands.pang, "clickclackmotherfuckerthegunscomingoutyougottreesecondsFIVE.wav"),
+    makeSoundCommand(commands.sussy, "sus.mp3"),
+]

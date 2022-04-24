@@ -4,12 +4,15 @@ module.exports = {
   dublettKollaren: async (matchIdData) => {
     const request = {
       baseURL: laggStatsBaseUrl,
-      url: "/result/all",
-      method: "get",
+      url: "/result/query",
+      method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       responseType: "json",
+      data: {
+        args: [["matchId", "==", matchIdData]],
+      },
     };
     try {
       const res = await axios(request);

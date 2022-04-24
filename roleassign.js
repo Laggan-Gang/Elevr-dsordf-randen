@@ -1,6 +1,7 @@
+const { commands } = require("./commands");
 
 module.exports = [{
-    triggervarningar: ["roll", "role"],
+    triggervarningar: [commands.role.command, commands.role.alternativeCommand],
     predikat: (meddelande) => /^rol(l|e)/.test(meddelande.content.toLowerCase()),
     handle: async function roleAssign(meddelande) {
         let dravel = meddelande.content.toLocaleLowerCase();
