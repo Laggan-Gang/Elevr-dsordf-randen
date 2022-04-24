@@ -114,6 +114,21 @@ client.on("messageCreate", async (meddelande) => {
           meddelande.reply("?");
         }
         break;
+        
+      case msg.toLowerCase() === commands.hello.command:
+        if (meddelande.member.voice.channel !== null) {
+          await kawaiimcgregoruwu(
+            meddelande
+          );
+        } else {
+          try {
+            emailAndTextMessageTodAndHisParents("tod fix this????");
+          } catch (e) {
+            meddelande.reply("tod broke something");
+            // >:(
+          }
+        }
+        break;
 
       case msg.toLocaleLowerCase() === commands.pang.command:
         if (meddelande.member.voice.channel !== null) {
@@ -124,6 +139,7 @@ client.on("messageCreate", async (meddelande) => {
           meddelande.reply("?");
         }
         break;
+       
     }
   }
 });
@@ -165,6 +181,29 @@ async function motiveradVarning(meddelande) {
     await meddelande.delete();
   } catch (error) {
     console.error(error);
+  }
+}
+
+async function kawaiimcgregoruwu(message) {
+  let channel = meddelande.member.voice.channel;
+  const player = createAudioPlayer();
+  const resource = createAudioResource(
+    "kawaiimcgregoruwu.wav"
+  );
+  const connection = joinVoiceChannel({
+    channelId: channel.id,
+    guildId: channel.guild.id,
+    adapterCreator: channel.guild.voiceAdapterCreator,
+  });
+  const subscription = connection.subscribe(player);
+  player.play(resource);
+  await löftesKollaren(player);
+  if (subscription) {
+    subscription.unsubscribe();
+    connection.destroy();
+    player.stop();
+  } else {
+    meddelande.reply("?");
   }
 }
 
