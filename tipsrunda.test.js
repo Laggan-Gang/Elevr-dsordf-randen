@@ -5,24 +5,34 @@ function createTriggers(...strings) {
     return strings.map(string => ({ triggervarningar: [[...string ]]}));
 }
 
-jämför = (a, b) => [Array.from(a).map((_, i) => i), Array.from(a), Array.from(b)];
+jämför = (a, b) => [Array.from(a), Array.from(b)];
 
-test('distance calculations are correct', () => {
-    expect(kostnad(...jämför("kitten", "sitting"))).toBe(3)
-    expect(kostnad(...jämför("role", "roll"))).toBe(1)
-    expect(kostnad(...jämför("aa", "ab"))).toBe(1)
-    expect(kostnad(...jämför("𨨏ajs", "bajs"))).toBe(1)
-    expect(kostnad(...jämför("rulla", "rull"))).toBe(1)
-    expect(kostnad(...jämför("rull", "rulla"))).toBe(1)
 
-    // Still borken, need better löfvenskij
-    // expect(kostnad(...jämför("!roll", "roll"))).toBe(1) 
-})
+verifieraKostnad = (A, B, utfall) => test(`distance between ${A} and ${B} should be ${utfall}`, () => expect(kostnad(...jämför(A, B))).toBe(utfall))
+
+verifieraKostnad("kitten", "sitting", 3)
+verifieraKostnad("sitting", "kitten", 3)
+verifieraKostnad("role", "roll", 1)
+verifieraKostnad("aa", "ab", 1)
+verifieraKostnad("𨨏ajs", "bajs", 1)
+verifieraKostnad("rulla", "rull", 1)
+verifieraKostnad("rull", "rulla", 1)
+verifieraKostnad("!hello", "hello!", 1)
+
+// Still borken, need better löfvenskij
+verifieraKostnad("roll", "!roll", 1)
+verifieraKostnad("!roll", "roll", 1)
+verifieraKostnad("Saturday", "Sunday", 3)
+verifieraKostnad("Sunday", "Saturday", 3)
 
 test('hittaTips should find some tips sometimes', () => {
     expect(hittaTips([..."roll"], createTriggers("bajs"))).toBe(false)
     expect(hittaTips([..."roll"], createTriggers("roller", "role"))).toBe("role")
     expect(hittaTips([..."roll"], createTriggers("role", "roller"))).toBe("role")
+    // Still borken, need better löfvenskij
+    expect(hittaTips([..."roll"], createTriggers("!roll"))).toBe("!roll")
+    expect(hittaTips([..."!roll"], createTriggers("roll"))).toBe("roll")
+    expect(kostnad(...jämför("!roll", "roll"))).toBe(1) 
 })
 
 
@@ -40,6 +50,6 @@ test('tipsrunda should reply with a nice tip sometimes', () => {
     expect(meddelande.reply.mock.calls.length).toBe(2)
 
     // Still bork
-    // tipsrunda(createTriggers("!roll"), meddelande) 
-    // expect(meddelande.reply.mock.calls.length).toBe(3)
+    tipsrunda(createTriggers("!roll"), meddelande) 
+    expect(meddelande.reply.mock.calls.length).toBe(3)
 })

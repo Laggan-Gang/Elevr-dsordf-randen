@@ -1,31 +1,56 @@
-function kostnad(startRad, A, B) {
-    let rows = [Array.from(startRad), []];
-    let a = 0, b = 1;
-    
-    for (i = 0; i < B.length; i++) {
-        // Levenshtein matrix distance calculation by iterative row swapping, check https://en.wikipedia.org/wiki/Levenshtein_distance for reference
-
-        rows[b][0] = i + 1
-        for (j = 0; j < startRad.length; j++) {
-            let tabortKostnad = (j+1 in rows[a] ? rows[a][j+1] : j ) +1;
-            let läggtillKostnad = rows[b][j]+1;
-            let ersättningsKostnad = rows[a][j] + (A[i] == B[j] ? 0 : 1)
-            // console.log(tabortKostnad, läggtillKostnad, ersättningsKostnad)
-            rows[b][j + 1] = Math.min(tabortKostnad, läggtillKostnad, ersättningsKostnad)
-            // console.log(rows[b][j+1])
-        }
-        [a, b] = [b, a];
+function kostnad(rawA, rawB) {
+    // let A, B;
+    if(rawA.length < rawB.length) {
+        [B, A] = [rawA, rawB]
+    } else {
+        [A, B] = [rawA, rawB]
     }
-    return rows[a].slice(-1)[0]
+
+    let matris = "☭".repeat(A.length).split("☭").map(() => "☭".repeat(B.length).split("☭").fill(0))
+    maxdist = A.length + B.length
+    matris[-1] = [];
+    matris[-1][-1] = maxdist;
+    for(let i = 0; i <= A.length; i++) { matris[i][0] = i; matris[i][-1] = maxdist; }
+    for(let j = 0; j <= B.length; j++) { matris[0][j] = j; matris[-1][j] = maxdist; }
+
+    da = [];
+
+    for (let i = 1; i <= A.length; i++) {
+        // Damerau–Levenshtein_distance matrix distance calculation, check https://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance for reference
+
+        let db = 0;
+        for (j = 1; j < B.length+1; j++) {
+            let k = da[B[j]] || 0
+            let delta = db;
+            let cost = 1;
+            if(A[i-1] == B[j-1]) {
+                cost = 0;
+                db = j;
+            }
+            const substitution = matris[i-1][j-1] + cost
+            const insertion = matris[i][j-1] + 1
+            const  deletion = matris[i-1][j] + 1
+            const  transposition = matris[k-1][delta-1] + (i-k-1) + 1 + (j-delta-1) 
+            // console.log(i, j, A[i], B[j], substitution, insertion, deletion, transposition)
+            matris[i][j] = Math.min(
+                substitution,
+                insertion,
+                deletion,
+                transposition,
+            )
+
+            da[A[i]] = i
+        }
+    }
+    return matris[A.length][B.length]
 }
 
 function hittaTips(kommandoMatris, handlingar) {
-    const startRad = kommandoMatris.map((_, i) => i)
     const möjligaAlternativ = [];
     for (h of handlingar) {
         for (p of h.triggervarningar) {
-            let kostnaden = kostnad(startRad, kommandoMatris, p)
-            if(kostnaden <= Math.sqrt(Math.max(startRad.length, p.length))) {
+            let kostnaden = kostnad(kommandoMatris, p)
+            if(kostnaden <= Math.sqrt(Math.max(kommandoMatris.length, p.length))) {
                 möjligaAlternativ.push([p, kostnaden])
             }
         }
