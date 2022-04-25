@@ -285,7 +285,7 @@ async function messageDeleter(meddelande) {
 }
 
 function kapitalisera(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  return string.replace(/^./,c=>c.toUpperCase());
 }
 
 async function kapitalArray(array) {
