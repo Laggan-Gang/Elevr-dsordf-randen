@@ -50,7 +50,7 @@ function hittaTips(kommandoMatris, handlingar) {
     for (h of handlingar) {
         for (p of h.triggervarningar) {
             let kostnaden = kostnad(kommandoMatris, p)
-            if(kostnaden <= Math.sqrt(Math.max(kommandoMatris.length, p.length)-1)) {
+            if(kostnaden <= Math.sqrt(Math.min(kommandoMatris.length, p.length)-1)) {
                 möjligaAlternativ.push([p, kostnaden])
             }
         }
@@ -68,6 +68,7 @@ module.exports = {
     hittaTips,
     tipsrunda: function(handlingar, meddelande, aleaIactaEst) {
         const kommando = meddelande.content.toLocaleLowerCase().normalize().split(" ")[0]
+        // console.log(kommando)
         const kommandoMatris = [...kommando]
         if (kommandoMatris.length > 0) {
             tips = hittaTips(kommandoMatris, handlingar);
