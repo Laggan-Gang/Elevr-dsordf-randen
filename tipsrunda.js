@@ -50,7 +50,7 @@ function hittaTips(kommandoMatris, handlingar) {
     for (h of handlingar) {
         for (p of h.triggervarningar) {
             let kostnaden = kostnad(kommandoMatris, p)
-            if(kostnaden <= Math.sqrt(Math.max(kommandoMatris.length, p.length))) {
+            if(kostnaden <= Math.sqrt(Math.max(kommandoMatris.length, p.length)-1)) {
                 möjligaAlternativ.push([p, kostnaden])
             }
         }

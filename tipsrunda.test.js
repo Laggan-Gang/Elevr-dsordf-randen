@@ -32,6 +32,7 @@ test('hittaTips should find some tips sometimes', () => {
     // Still borken, need better löfvenskij
     expect(hittaTips([..."roll"], createTriggers("!roll"))).toBe("!roll")
     expect(hittaTips([..."!roll"], createTriggers("roll"))).toBe("roll")
+    expect(hittaTips([..."I'll"], createTriggers("roll"))).not.toBe("roll")
     expect(kostnad(...jämför("!roll", "roll"))).toBe(1) 
 })
 
