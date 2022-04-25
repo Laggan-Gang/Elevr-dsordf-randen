@@ -29,6 +29,7 @@ client.once("ready", () => {
 });
 
 const handlingar = [
+  require('./statCalculator'),
   ...require('./statCommands'),
   ...require('./achtung'),
   ...require('./roleassign'),
