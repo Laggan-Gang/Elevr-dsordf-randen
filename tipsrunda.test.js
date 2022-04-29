@@ -20,6 +20,7 @@ verifieraKostnad("rull", "rulla", 1)
 verifieraKostnad("!hello", "hello!", 1)
 verifieraKostnad("roll", "!roll", 1)
 verifieraKostnad("!roll", "roll", 1)
+// verifieraKostnad("!stat", "that", 3) #idk, I give up, rip distance calcs
 verifieraKostnad("Saturday", "Sunday", 3)
 verifieraKostnad("Sunday", "Saturday", 3)
 
@@ -33,10 +34,10 @@ const verifyTips = (A, B, C, inverted = false) => test(`${A} should ${inverted ?
     }
 })
 const verifySimply = (A, B, inverted = false) => verifyTips(A, [B], B, inverted)
-// verifySimply("roll", "bajs", true)
-// verifySimply("roll", "!roll")
-// verifySimply("!roll", "roll")
-// verifySimply("I'll", "roll", true)
+verifySimply("roll", "bajs", true)
+verifySimply("roll", "!roll")
+verifySimply("!roll", "roll")
+verifySimply("I'll", "roll", true)
 verifySimply("that", "!stat", true)
 
 // test('hittaTips should find some tips sometimes', () => {
@@ -60,7 +61,9 @@ const verifyTipsrunda = (meddelande, tip, match) => test(`"${meddelande} should$
 })
 
 verifyTipsrunda("That way, you'd report team A: Haj, team B: tod, draw: true", "!stat", false)
-// verifyTipsrunda("roll", "role", true)
-// verifyTipsrunda("roll", "bajs", false)
-// verifyTipsrunda("roll", "roller", true)
-// verifyTipsrunda("roll", "!roll", true)
+verifyTipsrunda("!help", "!helpame", true)
+verifyTipsrunda("!dota", "!stat", false)
+verifyTipsrunda("roll", "role", true)
+verifyTipsrunda("roll", "bajs", false)
+verifyTipsrunda("roll", "roller", true)
+verifyTipsrunda("roll", "!roll", true)

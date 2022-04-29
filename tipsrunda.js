@@ -45,12 +45,21 @@ function kostnad(rawA, rawB) {
     return matris[A.length][B.length]
 }
 
+
+const bannadeKommandon = ["!dota"]
+
 function hittaTips(kommandoMatris, handlingar) {
     const möjligaAlternativ = [];
+    if(bannadeKommandon.includes(kommandoMatris.join(""))) {
+        return false;
+    }
     for (h of handlingar) {
         for (p of h.triggervarningar) {
             let kostnaden = kostnad(kommandoMatris, p)
-            if(kostnaden <= Math.sqrt(Math.min(kommandoMatris.length, p.length)-1)) {
+            let tillåtenKostnad = Math.sqrt(Math.min(kommandoMatris.length, p.length)-1);
+            let kekkostnad = [0,1].includes(p.join("").indexOf(kommandoMatris.join(""))) ? Math.abs(kommandoMatris.length-p.length) : 0
+            console.log(kommandoMatris.join(""), p.join(""), p.join("").indexOf(kommandoMatris.join("")), kostnaden, tillåtenKostnad, kekkostnad)
+            if(kostnaden <= Math.max(tillåtenKostnad, kekkostnad)) {
                 möjligaAlternativ.push([p, kostnaden])
             }
         }
@@ -67,6 +76,8 @@ module.exports = {
     kostnad,
     hittaTips,
     tipsrunda: function(handlingar, meddelande, aleaIactaEst) {
+        if(meddelande.content.toLocaleLowerCase().normalize().length > 30)
+            return;
         const kommando = meddelande.content.toLocaleLowerCase().normalize().split(" ")[0]
         // console.log(kommando)
         const kommandoMatris = [...kommando]
