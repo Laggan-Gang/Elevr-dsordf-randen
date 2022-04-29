@@ -58,7 +58,7 @@ function hittaTips(kommandoMatris, handlingar) {
             let kostnaden = kostnad(kommandoMatris, p)
             let tillåtenKostnad = Math.sqrt(Math.min(kommandoMatris.length, p.length)-1);
             let kekkostnad = [0,1].includes(p.join("").indexOf(kommandoMatris.join(""))) ? Math.abs(kommandoMatris.length-p.length) : 0
-            console.log(kommandoMatris.join(""), p.join(""), p.join("").indexOf(kommandoMatris.join("")), kostnaden, tillåtenKostnad, kekkostnad)
+            // console.log(kommandoMatris.join(""), p.join(""), p.join("").indexOf(kommandoMatris.join("")), kostnaden, tillåtenKostnad, kekkostnad)
             if(kostnaden <= Math.max(tillåtenKostnad, kekkostnad)) {
                 möjligaAlternativ.push([p, kostnaden])
             }
