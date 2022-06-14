@@ -89,7 +89,7 @@ module.exports = {
                         `did you mean '${tips}'?`,
                         `menade du '${tips}'?`,
                         `Имаш предвид '${tips}' за да преведа?`,
-                        `tarkoittko '${tips}'?`,
+                        `tarkoititko '${tips}'?`,
                         `あなたは「${tips}」を意味しましたか？`,
                     ][Math.floor(Math.random()*5)]
                 );
