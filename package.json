@@ -2,14 +2,16 @@
   "scripts": {
     "start": "node elevis.js",
     "dev": "nodemon elevis.js",
+    "dev-kek": "nodemon testarlite.js",
     "test:dev": "jest --watch",
     "test": "jest"
   },
   "dependencies": {
     "@discordjs/voice": "^0.7.5",
     "axios": "^0.25.0",
-    "discord.js": "^13.3.1",
-    "libsodium-wrappers": "^0.7.9"
+    "discord.js": "^13.10.3",
+    "libsodium-wrappers": "^0.7.9",
+    "protobufjs": "^7.1.1"
   },
   "devDependencies": {
     "jest": "^27.5.1",

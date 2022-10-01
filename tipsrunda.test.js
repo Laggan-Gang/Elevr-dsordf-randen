@@ -51,12 +51,16 @@ verifySimply("that", "!stat", true)
 const skapaImitationsMeddelande = (meddelande) => ({ content: meddelande, reply: jest.fn() })
 const verifyTipsrunda = (meddelande, tip, match) => test(`"${meddelande} should${match?'':"n't"} generate a tip for "${tip}"`, () => {
     const meddelandeObj = skapaImitationsMeddelande(meddelande)
-    tipsrunda(createTriggers(tip), meddelandeObj)
-    if(!match) {
-        expect(meddelandeObj.reply.mock.calls.length).toBe(0)
+    tipsrunda(createTriggers(...(Array.isArray(tip) ? tip : [tip])), meddelandeObj)
+    if([true, false].includes(match)) {
+        if(!match) {
+            expect(meddelandeObj.reply.mock.calls.length).toBe(0)
+        } else {
+            expect(meddelandeObj.reply.mock.calls.length).toBe(1)
+            expect(meddelandeObj.reply.mock.calls[0][0]).toMatch(new RegExp(tip))
+        }
     } else {
-        expect(meddelandeObj.reply.mock.calls.length).toBe(1)
-        expect(meddelandeObj.reply.mock.calls[0][0]).toMatch(new RegExp(tip))
+        expect(meddelandeObj.reply.mock.calls[0][0]).toMatch(match)
     }
 })
 
@@ -64,6 +68,18 @@ verifyTipsrunda("That way, you'd report team A: Haj, team B: tod, draw: true", "
 verifyTipsrunda("!help", "!helpame", true)
 verifyTipsrunda("!dota", "!stat", false)
 verifyTipsrunda("roll", "role", true)
+verifyTipsrunda("o fuck", "role", false)
 verifyTipsrunda("roll", "bajs", false)
 verifyTipsrunda("roll", "roller", true)
 verifyTipsrunda("roll", "!roll", true)
+verifyTipsrunda("o to be young and full of hope", "roll", false)
+verifyTipsrunda("n", "!nick", false)
+verifyTipsrunda("he", "!helpame", false)
+verifyTipsrunda("he could be trolling", "!helpame", false)
+verifyTipsrunda("!", "!stat", false)
+verifyTipsrunda("help", "!help", true)
+verifyTipsrunda("a", "warning", false)
+verifyTipsrunda("var", "varning", false)
+verifyTipsrunda("var", "varning", false)
+verifyTipsrunda("Varning", "varning", true)
+verifyTipsrunda("!pang", ["!stat", "pang"], /pang/)

@@ -1,4 +1,4 @@
-module.exports = function handleMessage(aleaIactaEst, handlingar, meddelande, client) {
+module.exports = async function handleMessage(aleaIactaEst, handlingar, meddelande, client) {
     const args = meddelande.content
         .replace(/!.+?(\s|$)/, "")
         .replace(/ +/, " ")

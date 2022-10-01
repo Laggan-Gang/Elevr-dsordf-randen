@@ -57,7 +57,7 @@ function hittaTips(kommandoMatris, handlingar) {
         for (p of h.triggervarningar) {
             let kostnaden = kostnad(kommandoMatris, p)
             let tillåtenKostnad = Math.sqrt(Math.min(kommandoMatris.length, p.length)-1);
-            let kekkostnad = [0,1].includes(p.join("").indexOf(kommandoMatris.join(""))) ? Math.abs(kommandoMatris.length-p.length) : 0
+            let kekkostnad = [0,Math.abs(kommandoMatris.length-p.length)].includes(p.join("").indexOf(kommandoMatris.join(""))) ? Math.abs(kommandoMatris.length-p.length) : 0
             // console.log(kommandoMatris.join(""), p.join(""), p.join("").indexOf(kommandoMatris.join("")), kostnaden, tillåtenKostnad, kekkostnad)
             if(kostnaden <= Math.max(tillåtenKostnad, kekkostnad)) {
                 möjligaAlternativ.push([p, kostnaden])
@@ -76,7 +76,10 @@ module.exports = {
     kostnad,
     hittaTips,
     tipsrunda: function(handlingar, meddelande, aleaIactaEst) {
-        if(meddelande.content.toLocaleLowerCase().normalize().length > 30)
+        if(
+            meddelande.content.toLocaleLowerCase().normalize().length > 30 
+            || meddelande.content.toLocaleLowerCase().normalize().length < 4
+        )
             return;
         const kommando = meddelande.content.toLocaleLowerCase().normalize().split(" ")[0]
         // console.log(kommando)

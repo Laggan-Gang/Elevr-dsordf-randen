@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+message Base {
+    map<string, Stoopid> members = 3;
+}
+
+message Stoopid {
+    uint64 loudness = 2;
+    uint64 legacy_loudness = 3;
+    uint64 grouchyness = 4;
+    uint64 ungratefulness = 5;
+    string id = 420;
+    repeated Rebuke reprimands = 720;
+}
+
+message Rebuke {
+    bool admonishment = 69;
+    string id = 666;
+    string infraction = 1337;
+    bool legacy = 9001;
+    string sender = 1;
+}
