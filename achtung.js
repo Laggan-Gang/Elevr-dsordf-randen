@@ -60,11 +60,11 @@ const messages = {
     },
     "who_do_you_think_you_are": {
         "sv": (previous_count) => `Vem tror du att du är?! Varna mig?! Nu får du allt skärpa dig.${previous_count > 5 ? ` Du har gjort det här ${previous_count} gånger förut! Snart har jag fått nog på ditt beteende...` : ""}`,
-        "en": (previous_count) => `Who do you think you are?! Warn me?! You need to take a look in the mirror.${previous_count > 5 ? ` You've done this ${previous_count} times before! I'm running out of patience...` : ""}`,
+        "en": (previous_count) => `Who do you think you are?! Warning me?! You need to take a good look in the mirror.${previous_count > 5 ? ` You've done this ${previous_count} times before! I'm running out of patience...` : ""}`,
     },
     "not_claes": {
-        "sv": (previous_count) => `Nej du, Claes gjorde faktiskt inget fel. ${previous_count > 10 ? "Varför ska du alltid mobba Claes såhär? Får du någon slags pervers njutning av att sparka på den som ligger ner?" : "Jag tänker inte utfärda någon sådan varning, prova igen imorgon."}`,
-        "en": (previous_count) => `Oh no, Claes did nothing wrong. ${previous_count > 10 ? "Why must you always bully Claes like this? Do you get some form of sick pleasure out of it? Warning to you good sir!" : "I will not be issuing a warning today, and that is final."}`,
+        "sv": (previous_count) => `Nej du den gubben går inte, Claes försökte bara hjälpa till. ${previous_count > 10 ? "Varför ska du alltid mobba Claes såhär? Får du någon slags pervers njutning av att sparka på den som ligger ner?" : "Jag tänker inte utfärda någon sådan varning, prova igen imorgon."}`,
+        "en": (previous_count) => `Oh no you don't, Claes was just trying to help. ${previous_count > 10 ? "Why must you always pick on Claes like this? Do you get some form of sick pleasure out of it? Warning to you good sir!" : "I will not be issuing a warning today, and that is final."}`,
     },
     "busybody": {
         "sv": (grouchyness) => `Vet du, du har faktiskt redan gett ut ${grouchyness} varningar, är det inte dags att du tar en promenad istället?`,
