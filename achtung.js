@@ -140,11 +140,11 @@ module.exports = [{
             case brottsling.id == "908820992703488061":
                 claes = false
             case brottsling.id == "745345949295181886":
-                meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"](golare.ungratefulness || 0))
+                meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"][language](golare.ungratefulness || 0))
                 golare.ungratefulness = golare.ungratefulness.add(1)
                 break
             case golare.grouchyness.comp(moriarty.loudness.mul(2)) > 0: // You're a busybody
-                meddelande.reply(messages["busybody"](golare.grouchyness))
+                meddelande.reply(messages["busybody"][language](golare.grouchyness))
                 break
             default:
                 brottet.reply(messages["varning"][language](brottsling, brottet.content !== "" ? '"' + brottet.content + '" ' : '', moriarty.loudness))
@@ -182,11 +182,11 @@ module.exports = [{
                 case warnedId == "908820992703488061":
                     claes = false
                 case warnedId == "745345949295181886":
-                    meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"](golare.ungratefulness || 0))
+                    meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"][language](golare.ungratefulness || 0))
                     golare.ungratefulness = golare.ungratefulness.add(1)
                     break
                 case golare.grouchyness.comp(moriarty.loudness.mul(3)) > 0: // Busybody detection
-                    meddelande.reply(messages["busybody"](golare.grouchyness))
+                    meddelande.reply(messages["busybody"][language](golare.grouchyness))
                     break
                 default:
                     const varningen = await meddelande.channel.send(messages["notable_warning"][language](warned, orsak));
