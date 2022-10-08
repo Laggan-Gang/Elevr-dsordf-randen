@@ -26,6 +26,7 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
   console.log("Elevrådsordföranden is online");
+  handlingar[0].nyhetsmorgon();
 });
 
 const handlingar = [
@@ -36,7 +37,6 @@ const handlingar = [
   ...require('./pang'),
   require('./help'),
 ];
-handlingar[0].nyhetsmorgon();
 // to handle multibyte kek properly, I'm sure bulgarian has some multibyte characters in it. Or that the weebs will start using kanji any day now
 // also needs to support UTF smileys as bot commands for obvious reasons
 for(h of handlingar) {

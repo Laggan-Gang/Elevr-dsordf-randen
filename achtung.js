@@ -1,4 +1,5 @@
 const protobuf = require('protobufjs');
+const Long = require("long");
 const {
     MessageAttachment,
 } = require("discord.js");
@@ -37,11 +38,7 @@ const loaded = new Promise((resolve) => {
 
 const getStoopid = (id) => {
     if (!(id in varningarna)) {
-        varningarna[id] = {
-            id,
-            loudness: 0,
-            grouchyness: 0,
-        };
+        varningarna[id] = Stoopid.create({ id });
     }
     return varningarna[id]
 }
@@ -74,6 +71,32 @@ const messages = {
     }
 }
 
+async function sparaVarningar() {
+    await loaded;
+
+    const msgToSave = { members: varningarna };
+    const errMsg = Base.verify(msgToSave);
+    if (errMsg) {
+        console.error(errMsg);
+        return
+    }
+
+    var dataBuffer = Base.encode(msgToSave).finish();
+
+    const wavBuffer = await bufferToWav(dataBuffer)
+
+    const attachment = new MessageAttachment(wavBuffer, 'iasid.wav');
+    // attachment.setSpoiler(true);
+    attachment.setDescription("Nej nu ni")
+    // console.log("start saving")
+    const meddelandet = await hämtaMeddelandet();
+    await meddelandet.edit({
+        content: `${fraser[Math.floor(Math.random() * fraser.length)]}${JSON.stringify({ mumsbitar: dataBuffer.length })}`,
+        files: [attachment],
+    });
+    // console.log("done saving")
+}
+
 module.exports = [{
     triggervarningar: ["varning", "warning"],
     sättGrundvarningar: async (nyaVarningar) => {
@@ -98,30 +121,7 @@ module.exports = [{
             throw e
         }
     },
-    sparaVarningar: async function sparaVarningar() {
-
-        await loaded;
-
-        const msgToSave = { members: varningarna };
-        const errMsg = Base.verify(msgToSave);
-        if (errMsg)
-            throw Error(errMsg);
-
-        var dataBuffer = Base.encode(msgToSave).finish();
-
-        const wavBuffer = await bufferToWav(dataBuffer)
-
-        const attachment = new MessageAttachment(wavBuffer, 'iasid.wav');
-        // attachment.setSpoiler(true);
-        attachment.setDescription("Nej nu ni")
-        // console.log("start saving")
-        const meddelandet = await hämtaMeddelandet();
-        await meddelandet.edit({
-            content: `${fraser[Math.floor(Math.random() * fraser.length)]}${JSON.stringify({ mumsbitar: dataBuffer.length })}`,
-            files: [attachment],
-        });
-        // console.log("done saving")
-    },
+    sparaVarningar,
     predikat: (meddelande) => /^(varning|warning)/.test(meddelande.content.toLocaleLowerCase()) && meddelande.type === "REPLY",
     handle: async function elevRådsOrdförande(meddelande) {
         const brottet = await meddelande.channel.messages.fetch(
@@ -133,29 +133,33 @@ module.exports = [{
         const moriarty = getStoopid(brottsling.id)
         const golare = getStoopid(meddelande.author.id)
 
+        console.log(golare.id, golare.loudness, golare.grouchyness)
+        console.log(moriarty.id, moriarty.loudness, moriarty.grouchyness)
         let claes = true;
         switch (true) {
             case brottsling.id == "908820992703488061":
                 claes = false
             case brottsling.id == "745345949295181886":
                 meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"](golare.ungratefulness || 0))
-                golare.ungratefulness = 1 + (golare.ungratefulness || 0)
+                golare.ungratefulness = golare.ungratefulness.add(1)
                 break
-            case golare.grouchyness > moriarty.loudness * 2: // You're a busybody
+            case golare.grouchyness.comp(moriarty.loudness.mul(2)) > 0: // You're a busybody
                 meddelande.reply(messages["busybody"](golare.grouchyness))
                 break
             default:
                 brottet.reply(messages["varning"][language](brottsling, brottet.content !== "" ? '"' + brottet.content + '" ' : '', moriarty.loudness))
-                golare.grouchyness = 1 + (golare.grouchyness || 0)
-                moriarty.loudness = 1 + (moriarty.loudness || 0)
-                moriarty.reprimands.push({
+                golare.grouchyness = golare.grouchyness.add(1)
+                moriarty.loudness = moriarty.loudness.add(1)
+                moriarty.reprimands.push(Rebuke.create({
                     admonishment: false,
                     id: brottet.id,
                     infraction: brottet.content.toString(),
                     legacy: false,
                     sender: golare.id,
-                });
+                }));
         }
+        console.log(golare.id, golare.loudness, golare.grouchyness)
+        console.log(moriarty.id, moriarty.loudness, moriarty.grouchyness)
         sparaVarningar();
     }
 },
@@ -179,22 +183,22 @@ module.exports = [{
                     claes = false
                 case brottsling.id == "745345949295181886":
                     meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"](golare.ungratefulness || 0))
-                    golare.ungratefulness = 1 + (golare.ungratefulness || 0)
+                    golare.ungratefulness = golare.ungratefulness.add(1)
                     break
-                case golare.grouchyness > moriarty.loudness * 3: // Busybody detection
+                case golare.grouchyness.comp(moriarty.loudness.mul(3)) > 0: // Busybody detection
                     meddelande.reply(messages["busybody"](golare.grouchyness))
                     break
                 default:
                     const varningen = await meddelande.channel.send(messages["notable_warning"][language](warned, orsak));
-                    golare.grouchyness = 1 + (golare.grouchyness || 0)
-                    moriarty.loudness = 1 + (moriarty.loudness || 0)
-                    moriarty.reprimands.push({
+                    golare.grouchyness = golare.grouchyness.add(1)
+                    moriarty.loudness = moriarty.loudness.add(1)
+                    moriarty.reprimands.push(Rebuke.create({
                         admonishment: true,
                         id: varningen.id,
                         infraction: orsak,
                         legacy: false,
                         sender: golare.id,
-                    });
+                    }));
                     meddelande.delete()
 
             }
