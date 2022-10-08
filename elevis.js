@@ -26,7 +26,7 @@ const client = new Client({
 // When the client is ready, run this code (only once)
 client.once("ready", () => {
   console.log("Elevrådsordföranden is online");
-  handlingar[0].nyhetsmorgon();
+  handlingar[0].nyhetsmorgon(client);
 });
 
 const handlingar = [
