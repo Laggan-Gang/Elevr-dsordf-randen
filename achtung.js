@@ -168,7 +168,7 @@ module.exports = [{
     handle: async function motiveradVarning(meddelande) {
         const arr = meddelande.content.split(" ");
         const warned = arr[0];
-        const warnedId = arr.warned.slice(2, -1);
+        const warnedId = warned.slice(2, -1);
         const moriarty = getStoopid(warnedId)
         const golare = getStoopid(meddelande.author.id)
 
@@ -179,9 +179,9 @@ module.exports = [{
         const language = command[0] == "v" ? "sv" : "en";
         try {
             switch (true) {
-                case brottsling.id == "908820992703488061":
+                case warnedId == "908820992703488061":
                     claes = false
-                case brottsling.id == "745345949295181886":
+                case warnedId == "745345949295181886":
                     meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"](golare.ungratefulness || 0))
                     golare.ungratefulness = golare.ungratefulness.add(1)
                     break
