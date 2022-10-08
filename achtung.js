@@ -39,6 +39,8 @@ const getStoopid = (id) => {
     if (!(id in varningarna)) {
         varningarna[id] = {
             id,
+            loudness: 0,
+            grouchyness: 0,
         };
     }
     return varningarna[id]
@@ -47,10 +49,6 @@ const getStoopid = (id) => {
 async function hämtaMeddelandet() {
     const kanalen = globalClient.current.channels.cache.get(dukanva)
     return await kanalen.messages.fetch(varningarnasHem)
-}
-
-async function räknaUtVarningar(x) {
-
 }
 
 const messages = {
@@ -83,6 +81,7 @@ module.exports = [{
         return true;
     },
     nyhetsmorgon: async (client) => {
+        console.log("Hämtar discordbladet från brevlådan")
         globalClient.current = client;
         const meddelandet = await hämtaMeddelandet();
         const att = meddelandet.attachments.first();
@@ -93,6 +92,7 @@ module.exports = [{
             const foo = Buffer.from(response.data, 'binary');
             const nyaVarningar = Base.decode(foo.slice(44)).members
             varningarna = nyaVarningar
+            console.log("Nu blir vi farliga")
         } catch (e) {
             console.error("Ooops my data is borked")
             throw e

@@ -29,14 +29,14 @@ client.once("ready", () => {
 });
 
 const handlingar = [
+  ...require('./achtung'),
   require('./statCalculator'),
   ...require('./statCommands'),
-  ...require('./achtung'),
   ...require('./roleassign'),
   ...require('./pang'),
   require('./help'),
 ];
-
+handlingar[0].nyhetsmorgon();
 // to handle multibyte kek properly, I'm sure bulgarian has some multibyte characters in it. Or that the weebs will start using kanji any day now
 // also needs to support UTF smileys as bot commands for obvious reasons
 for(h of handlingar) {
