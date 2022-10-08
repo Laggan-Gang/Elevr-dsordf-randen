@@ -58,7 +58,7 @@ const messages = {
         "en": (previous_count) => `Who do you think you are?! Warning me?! You need to take a good look in the mirror.${previous_count > 5 ? ` You've done this ${previous_count} times before! I'm running out of patience...` : ""}`,
     },
     "not_claes": {
-        "sv": (previous_count) => `Nej du den gubben går inte, Claes försökte bara hjälpa till. ${previous_count > 10 ? "Varför ska du alltid mobba Claes såhär? Får du någon slags pervers njutning av att sparka på den som ligger ner?" : "Jag tänker inte utfärda någon sådan varning, prova igen imorgon."}`,
+        "sv": (previous_count) => `Nej du den guuben går inte, Claes försökte bara hjälpa till. ${previous_count > 10 ? "Varför ska du alltid mobba Claes såhär? Får du någon slags pervers njutning av att sparka på den som ligger ner?" : "Jag tänker inte utfärda någon sådan varning, prova igen imorgon."}`,
         "en": (previous_count) => `Oh no you don't, Claes was just trying to help. ${previous_count > 10 ? "Why must you always pick on Claes like this? Do you get some form of sick pleasure out of it? Warning to you good sir!" : "I will not be issuing a warning today, and that is final."}`,
     },
     "busybody": {
@@ -135,10 +135,10 @@ module.exports = [{
 
         console.log(golare.id, golare.loudness, golare.grouchyness)
         console.log(moriarty.id, moriarty.loudness, moriarty.grouchyness)
-        let claes = true;
+        let claes = false;
         switch (true) {
             case brottsling.id == "908820992703488061":
-                claes = false
+                claes = true
             case brottsling.id == "745345949295181886":
                 meddelande.reply(messages[claes ? "who_do_you_think_you_are" : "not_claes"][language](golare.ungratefulness || 0))
                 golare.ungratefulness = golare.ungratefulness.add(1)
