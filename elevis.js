@@ -49,13 +49,16 @@ for(h of handlingar) {
 
 
 client.on("messageCreate", async (meddelande) => {
+  if (meddelande.content.toLowerCase().startsWith("warnung")){
+    await meddelande.reply("Entschuldigung, ich spreche kein Deutsch.")
+  } else {
   let aleaIactaEstIterum = Math.random() * 75;
   console.log(`Tärningen är kastad igen, den blev typ ${Math.floor(aleaIactaEstIterum)}`);
   await handleMessage(aleaIactaEstIterum, handlingar, meddelande, client) || (
     (!meddelande.author.bot || meddelande.author.id == "745345949295181886")
     && [meddelande.channelId, meddelande.channel.parentId].includes("539847809004994560")
     && tipsrunda(handlingar, meddelande, aleaIactaEstIterum, client)
-  )
+  )}
 });
 
 // Login to Discord with your client's token this should always go last I guess?
