@@ -53,12 +53,22 @@ client.on("messageCreate", async (meddelande) => {
     await meddelande.reply("Entschuldigung, ich spreche kein Deutsch.")
   } else {
   let aleaIactaEstIterum = Math.random() * 75;
+  if((meddelande.attachments.size > 0) && (aleaIactaEstIterum < 15)){
+    console.log(meddelande.attachments);
+    for (let [anknytningsid, anknytning] of meddelande.attachments){
+      if(anknytning.contentType != null){
+        if(anknytning.contentType.includes('image') && !meddelande.content.toLowerCase().includes("source")){
+          meddelande.reply("Nice photo, did you take it yourself? Otherwise the faculty would like for you to include a source.");
+        };
+      };
+    };
+  };
   console.log(`Tärningen är kastad igen, den blev typ ${Math.floor(aleaIactaEstIterum)}`);
   await handleMessage(aleaIactaEstIterum, handlingar, meddelande, client) || (
     (!meddelande.author.bot || meddelande.author.id == "745345949295181886")
     && [meddelande.channelId, meddelande.channel.parentId].includes("539847809004994560")
     && tipsrunda(handlingar, meddelande, aleaIactaEstIterum, client)
-  )}
+  )};
 });
 
 // Login to Discord with your client's token this should always go last I guess?
