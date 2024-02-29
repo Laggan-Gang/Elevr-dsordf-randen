@@ -53,7 +53,7 @@ client.on("messageCreate", async (meddelande) => {
     await meddelande.reply("Entschuldigung, ich spreche kein Deutsch.")
   } else {
   let aleaIactaEstIterum = Math.random() * 75;
-  if((meddelande.attachments.size > 0) && (aleaIactaEstIterum < 15)){
+  if((meddelande.attachments.size > 0) && (aleaIactaEstIterum < 3)){
     console.log(meddelande.attachments);
     for (let [anknytningsid, anknytning] of meddelande.attachments){
       if(anknytning.contentType != null){
