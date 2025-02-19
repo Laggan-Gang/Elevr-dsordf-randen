@@ -125,7 +125,7 @@ module.exports = {
     skapaLedarLista,
     handle: async (meddelande, args) => {
         try {
-            const game = args?.[1];
+            const game = args.length > 1 ? args.slice(1).join(" ") : false;
 
             let resultat = await getAllStatsFor(game);
             if (!resultat||resultat?.length == 0) {
